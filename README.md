@@ -4,7 +4,7 @@
 
 Portfolio store for a fictional skincare brand. The theme is written from scratch in Liquid, CSS and vanilla JavaScript, with no starter theme, no framework and no storefront apps. It passes Shopify Theme Check with zero offenses.
 
-**Live store:** [dewlune-vp5q4sat.myshopify.com](https://dewlune-vp5q4sat.myshopify.com) (password protected development store)
+**Live store:** [dewlune-vp5q4sat.myshopify.com](https://dewlune-vp5q4sat.myshopify.com), password: `dewlune`
 
 > Dewlune is a fictional brand. The demo store does not fulfil orders.
 
