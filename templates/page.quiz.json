@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "main": { "type": "skin-quiz",
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "How does your skin feel by midday?", "hint": "Pick the closest match.", "answers": "Tight and dry = skin:dry concern:dryness\nShiny in the T-zone = skin:combination\nShiny all over = skin:oily\nComfortable = skin:normal\nEasily irritated = skin:sensitive concern:redness" } },
+        "q2": { "type": "question", "settings": { "question": "What would you most like to change?", "hint": "Your main concern carries the most weight.", "answers": "Dull, tired looking skin = concern:dullness concern:dullness\nUneven tone and dark spots = concern:dark-spots concern:dark-spots\nDryness and flaking = concern:dryness concern:dryness\nRedness and sensitivity = concern:redness concern:redness\nFine lines = concern:fine-lines concern:fine-lines" } },
+        "q3": { "type": "question", "settings": { "question": "How much sun do you get on a normal day?", "hint": "It decides whether daily protection is part of your routine.", "answers": "Mostly indoors = sun:low\nA commute and a walk = concern:sun-care\nOutdoors most of the day = concern:sun-care concern:sun-care" } },
+        "q4": { "type": "question", "settings": { "question": "How much time do you want to spend?", "hint": "You can always add steps later.", "answers": "Two minutes, the essentials = routine:minimal\nI enjoy a full ritual = routine:full" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4"],
+      "settings": { "step_order": "cleanse,serum,moisturize,oil,protect" }
+    },
+    "faq": { "type": "faq",
+      "blocks": {
+        "f1": { "type": "item", "settings": { "question": "How are products chosen?", "answer": "<p>Each answer adds tags. Products whose tags match score higher, and the best match for each step of the routine is picked.</p>" } },
+        "f2": { "type": "item", "settings": { "question": "Is this medical advice?", "answer": "<p>No. The quiz suggests cosmetic products. For skin conditions, talk to a dermatologist.</p>" } }
+      },
+      "block_order": ["f1", "f2"],
+      "settings": { "heading": "About the quiz", "eyebrow": "How it works" }
+    }
+  },
+  "order": ["main", "faq"]
+}

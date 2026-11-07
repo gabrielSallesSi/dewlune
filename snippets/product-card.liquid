@@ -1,0 +1,55 @@
+{%- comment -%}
+  Product card with branded, locally bundled Dewlune product photography.
+  - product: Shopify product object
+  - sizes: image sizes attribute
+{%- endcomment -%}
+{%- liquid
+  assign concerns = ''
+  assign concern_labels = ''
+  assign step = ''
+  for tag in product.tags
+    if tag contains 'concern:'
+      assign c = tag | remove_first: 'concern:'
+      assign concerns = concerns | append: c | append: ' '
+      assign concern_labels = concern_labels | append: c | append: ','
+    elsif tag contains 'step:'
+      assign step = tag | remove_first: 'step:'
+    endif
+  endfor
+  assign concern_list = concern_labels | split: ','
+  assign variant = product.selected_or_first_available_variant
+  assign sizes = sizes | default: '(min-width: 1200px) 25vw, (min-width: 750px) 33vw, 50vw'
+-%}
+<article class="card spotlight" data-spotlight data-concerns="{{ concerns | strip }}" data-product-card>
+  <a href="{{ product.url }}" class="card__media glare" data-glare aria-label="{{ product.title | escape }}">
+    {% render 'branded-product-image', product: product, class: 'card__img card__img--main', sizes: sizes, loading: 'lazy' %}
+    {%- if step != blank -%}<span class="card__step">{{ step | replace: '-', ' ' }}</span>{%- endif -%}
+    <span class="glare__band" aria-hidden="true"></span>
+  </a>
+  <div class="card__body">
+    {%- if concern_list.size > 0 -%}
+      <ul class="card__chips" role="list">
+        {%- for c in concern_list limit: 2 -%}<li>{{ c | replace: '-', ' ' }}</li>{%- endfor -%}
+      </ul>
+    {%- endif -%}
+    <p class="card__vendor">{{ product.vendor | escape }}</p>
+    <h3 class="card__title"><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
+    {%- if product.type != blank -%}<p class="card__type">{{ product.type | escape }}</p>{%- endif -%}
+    <div class="card__foot">
+      {% render 'price', product: product, show_from: true %}
+      {%- if variant.available -%}
+        <form action="{{ routes.cart_add_url }}" method="post" class="card__add" data-product-form>
+          <input type="hidden" name="id" value="{{ variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="hover-btn hover-btn--sm" aria-label="{{ 'products.quick_add' | t }}: {{ product.title | escape }}{% if product.has_only_default_variant == false %}, {{ variant.title | escape }}{% endif %}">
+            <span class="hover-btn__dot" aria-hidden="true"></span>
+            <span class="hover-btn__label">{{ 'products.quick_add' | t }}</span>
+            <span class="hover-btn__reveal" aria-hidden="true">{% render 'icon', icon: 'plus' %}{{ 'products.add_to_cart' | t }}</span>
+          </button>
+        </form>
+      {%- else -%}
+        <span class="card__soldout">{{ 'products.sold_out' | t }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

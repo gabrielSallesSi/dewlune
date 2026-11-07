@@ -1,0 +1,38 @@
+{%- liquid
+  assign image_file = ''
+  case product.handle
+    when 'amber-glow-serum'
+      assign image_file = 'dewlune-amber-glow-serum.webp'
+    when 'cloud-cream'
+      assign image_file = 'dewlune-cloud-cream.webp'
+    when 'soft-gel-cleanser'
+      assign image_file = 'dewlune-soft-gel-cleanser.webp'
+    when 'daily-veil-spf-30'
+      assign image_file = 'dewlune-daily-veil-spf-30.webp'
+    when 'hydra-veil-serum'
+      assign image_file = 'dewlune-hydra-veil-serum.webp'
+    when 'moonset-face-oil'
+      assign image_file = 'dewlune-moonset-face-oil.webp'
+    when 'the-daily-ritual-set'
+      assign image_file = 'dewlune-the-daily-ritual-set.webp'
+  endcase
+
+  assign image_class = class | default: ''
+  assign image_loading = loading | default: 'lazy'
+  assign image_alt = alt | default: product.vendor | append: ' ' | append: product.title
+  assign image_sizes = sizes | default: '100vw'
+  assign image_width = width | default: 1122
+-%}
+{%- if output == 'url' -%}
+  {%- if image_file != blank -%}
+    {{ image_file | asset_url }}
+  {%- elsif product.featured_media -%}
+    {{ product.featured_media | image_url: width: image_width }}
+  {%- endif -%}
+{%- elsif image_file != blank -%}
+  <img src="{{ image_file | asset_url }}" width="1122" height="1402" loading="{{ image_loading }}" decoding="async" alt="{{ image_alt | escape }}"{% if image_class != blank %} class="{{ image_class }}"{% endif %} sizes="{{ image_sizes }}"{% if priority %} fetchpriority="high"{% endif %}>
+{%- elsif product.featured_media -%}
+  {{ product.featured_media | image_url: width: 1600 | image_tag: loading: image_loading, widths: '360, 540, 720, 960, 1200, 1600', sizes: image_sizes, class: image_class, alt: image_alt }}
+{%- else -%}
+  {{ 'product-1' | placeholder_svg_tag: image_class }}
+{%- endif -%}

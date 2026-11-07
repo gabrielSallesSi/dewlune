@@ -1,0 +1,48 @@
+<section class="section faq" data-faq>
+  <div class="container container--mid faq__grid">
+    <div class="faq__aside">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h1"><span class="blur-text" data-blur-text data-on-view>{{ section.settings.heading }}</span></h2>
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text }}</p>{%- endif -%}
+      <div class="field-pill">
+        {% render 'icon', icon: 'search' %}
+        <label class="visually-hidden" for="FaqSearch-{{ section.id }}">{{ 'general.search' | t }}</label>
+        <input id="FaqSearch-{{ section.id }}" type="search" placeholder="{{ section.settings.placeholder | escape }}" data-faq-search autocomplete="off">
+      </div>
+    </div>
+    <div class="faq__list">
+      {%- for block in section.blocks -%}
+        <details class="accordion" data-faq-item {{ block.shopify_attributes }}>
+          <summary><span>{{ block.settings.question }}</span>{% render 'icon', icon: 'plus' %}</summary>
+          <div class="accordion__body rte">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+      <p class="glossary__empty" data-faq-empty hidden>{{ section.settings.empty }}</p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "class": "section-faq",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Questions" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Good to know" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Still unsure? Write to us from the contact page." },
+    { "type": "text", "id": "placeholder", "label": "Search placeholder", "default": "Search questions" },
+    { "type": "text", "id": "empty", "label": "No results text", "default": "No question matched. Try shipping, refill or vitamin C." }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Can I use vitamin C and niacinamide together?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Yes. Apply Amber Glow Serum first, wait a minute, then follow with Cloud Cream.</p>" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "FAQ", "blocks": [ { "type": "item" } ] } ]
+}
+{% endschema %}

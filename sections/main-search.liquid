@@ -1,0 +1,37 @@
+<section class="section search-page">
+  <div class="container">
+    <h1 class="h1">{%- if search.performed -%}{{ 'search.results_for' | t: terms: search.terms }}{%- else -%}{{ 'search.title' | t }}{%- endif -%}</h1>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="field-pill search-page__form">
+      <label class="visually-hidden" for="SearchPageInput">{{ 'general.search' | t }}</label>
+      <input id="SearchPageInput" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}">
+      <input type="hidden" name="type" value="product">
+      <button type="submit" class="shine-btn">{{ 'general.search' | t }}{% render 'icon', icon: 'search' %}</button>
+    </form>
+    {%- if search.performed -%}
+      {%- paginate search.results by 24 -%}
+        {%- if search.results_count > 0 -%}
+          <ul class="product-grid" role="list">
+            {%- for item in search.results -%}
+              <li class="product-grid__item" data-reveal style="--i: {{ forloop.index0 | modulo: 8 }}">
+                {%- if item.object_type == 'product' -%}
+                  {% render 'product-card', product: item %}
+                {%- else -%}
+                  <a class="search-hit" href="{{ item.url }}"><strong>{{ item.title }}</strong><span>{{ item.content | strip_html | truncate: 120 }}</span></a>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+          {%- if paginate.pages > 1 -%}
+            <nav class="pagination" aria-label="Pagination">{{ paginate | default_pagination }}</nav>
+          {%- endif -%}
+        {%- else -%}
+          <p class="empty-state">{{ 'search.no_results' | t: terms: search.terms }}</p>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Search results", "class": "section-main-search", "settings": [] }
+{% endschema %}

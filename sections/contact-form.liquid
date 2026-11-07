@@ -1,0 +1,32 @@
+<section class="section contact">
+  <div class="container container--mid contact__grid">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h1 class="h1"><span class="blur-text" data-blur-text>{{ section.settings.heading }}</span></h1>
+      <div class="rte">{{ section.settings.text }}</div>
+    </div>
+    {%- form 'contact', class: 'contact__form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-success" role="status">{% render 'icon', icon: 'check' %} {{ 'contact.success' | t }}</p>
+      {%- endif -%}
+      {%- if form.errors -%}<p class="form-error">{{ form.errors | default_errors }}</p>{%- endif -%}
+      <label class="field"><span>{{ 'contact.name' | t }}</span><input type="text" name="contact[name]" autocomplete="name" value="{{ form.name }}"></label>
+      <label class="field"><span>{{ 'contact.email' | t }}</span><input type="email" name="contact[email]" autocomplete="email" required value="{{ form.email }}"></label>
+      <label class="field"><span>{{ 'contact.message' | t }}</span><textarea name="contact[body]" rows="5">{{ form.body }}</textarea></label>
+      <button type="submit" class="shine-btn">{{ 'contact.send' | t }}{% render 'icon', icon: 'arrow-circle' %}</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "class": "section-contact",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Contact" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ask us anything" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Questions about an ingredient, your order or which formula fits your skin. We reply within two business days.</p>" }
+  ],
+  "presets": [ { "name": "Contact form" } ]
+}
+{% endschema %}

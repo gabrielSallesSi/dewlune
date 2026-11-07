@@ -1,0 +1,83 @@
+{
+  "sections": {
+    "builder": {
+      "type": "ritual-builder",
+      "settings": {
+        "count": 3,
+        "discount": 15
+      }
+    },
+    "routine": {
+      "type": "routine",
+      "blocks": {
+        "st1": {
+          "type": "step",
+          "settings": {
+            "title": "Cleanse",
+            "note": "60 seconds, lukewarm water",
+            "time": "both",
+            "handle": "soft-gel-cleanser"
+          }
+        },
+        "st2": {
+          "type": "step",
+          "settings": {
+            "title": "Brighten",
+            "note": "3 to 4 drops",
+            "time": "am",
+            "handle": "amber-glow-serum"
+          }
+        },
+        "st3": {
+          "type": "step",
+          "settings": {
+            "title": "Hydrate",
+            "note": "On damp skin",
+            "time": "pm",
+            "handle": "hydra-veil-serum"
+          }
+        },
+        "st4": {
+          "type": "step",
+          "settings": {
+            "title": "Moisturize",
+            "note": "A pea sized amount",
+            "time": "both",
+            "handle": "cloud-cream"
+          }
+        },
+        "st5": {
+          "type": "step",
+          "settings": {
+            "title": "Protect",
+            "note": "Last step, every morning",
+            "time": "am",
+            "handle": "daily-veil-spf-30"
+          }
+        },
+        "st6": {
+          "type": "step",
+          "settings": {
+            "title": "Seal",
+            "note": "2 drops pressed in",
+            "time": "pm",
+            "handle": "moonset-face-oil"
+          }
+        }
+      },
+      "block_order": [
+        "st1",
+        "st2",
+        "st3",
+        "st4",
+        "st5",
+        "st6"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "builder",
+    "routine"
+  ]
+}

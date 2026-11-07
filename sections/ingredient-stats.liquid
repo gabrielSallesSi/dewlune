@@ -1,0 +1,57 @@
+<section class="section stats">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="h2"><span class="blur-text" data-blur-text data-on-view>{{ section.settings.heading }}</span></h2>
+      </div>
+      {%- if section.settings.text != blank -%}<p class="section-head__text">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <ul class="stats__grid" role="list">
+      {%- for block in section.blocks -%}
+        <li class="stat spotlight" data-spotlight style="--i: {{ forloop.index0 }}" data-reveal {{ block.shopify_attributes }}>
+          <div class="stat__media">
+            {% render 'media', image: block.settings.image, url: block.settings.image_url, alt: block.settings.label, sizes: '(min-width: 990px) 25vw, 50vw', max: 1920 %}
+          </div>
+          <p class="stat__value">
+            <span data-count-up data-to="{{ block.settings.value }}" data-decimals="{{ block.settings.decimals }}">{{ block.settings.value }}</span><span class="stat__suffix">{{ block.settings.suffix }}</span>
+          </p>
+          <p class="stat__label">{{ block.settings.label }}</p>
+          {%- if block.settings.product != blank -%}
+            {%- assign p = all_products[block.settings.product] -%}
+            <a class="stat__link" href="{{ p.url | default: '#' }}">{{ p.title | default: block.settings.product }} {% render 'icon', icon: 'arrow' %}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ingredient numbers",
+  "class": "section-stats",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Full disclosure" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The numbers on the front" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Each formula is built around a small number of actives at a stated concentration. No proprietary blends." }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Number",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Number (CountUp)", "info": "Digits only, a dot for decimals.", "default": "15" },
+        { "type": "range", "id": "decimals", "label": "Decimals", "min": 0, "max": 2, "step": 1, "default": 0 },
+        { "type": "text", "id": "suffix", "label": "Suffix", "default": "%" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Vitamin C in Amber Glow Serum" },
+        { "type": "text", "id": "product", "label": "Product handle", "info": "Optional link, for example amber-glow-serum.", "default": "amber-glow-serum" },
+        { "type": "image_picker", "id": "image", "label": "Texture image" },
+        { "type": "text", "id": "image_url", "label": "Or Unsplash image link", "default": "https://images.unsplash.com/photo-1748543668699-a8a9398e9161" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Ingredient numbers", "blocks": [ { "type": "stat" } ] } ]
+}
+{% endschema %}

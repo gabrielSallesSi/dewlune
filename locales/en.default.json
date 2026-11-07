@@ -1,0 +1,123 @@
+{
+  "general": {
+    "skip": "Skip to content",
+    "tagged": "Tagged \"{{ tags }}\"",
+    "page": "Page {{ page }}",
+    "menu": "Menu",
+    "close": "Close",
+    "search": "Search",
+    "account": "Account",
+    "cart": "Cart",
+    "previous": "Previous",
+    "next": "Next",
+    "home": "Home",
+    "demo_notice": "Demo store. Dewlune is a fictional brand."
+  },
+  "products": {
+    "add_to_cart": "Add to bag",
+    "sold_out": "Sold out",
+    "unavailable": "Unavailable",
+    "quick_add": "Quick add",
+    "from": "From {{ price }}",
+    "regular_price": "Regular price",
+    "sale_price": "Sale price",
+    "quantity": "Quantity",
+    "size": "Size",
+    "one_time": "One-time purchase",
+    "subscribe": "Subscribe and save",
+    "key_ingredients": "Key ingredients",
+    "how_to_use": "How to use",
+    "details": "Details",
+    "view_product": "View product",
+    "you_may_like": "Pairs well with",
+    "share": "Share"
+  },
+  "cart": {
+    "title": "Your bag",
+    "empty": "Your bag is empty.",
+    "continue": "Continue shopping",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "remove": "Remove",
+    "taxes": "Taxes and shipping calculated at checkout.",
+    "added": "Added to your bag",
+    "error": "Something went wrong. Please try again.",
+    "free_shipping_remaining": "You are {{ amount }} away from free shipping",
+    "free_shipping_unlocked": "Free shipping unlocked",
+    "note": "Add a note",
+    "discounts": "Savings"
+  },
+  "search": {
+    "placeholder": "Search serums, creams, ingredients",
+    "results_for": "Results for \"{{ terms }}\"",
+    "no_results": "Nothing matched \"{{ terms }}\". Try an ingredient like niacinamide.",
+    "products": "Products",
+    "pages": "Pages",
+    "view_all": "View all results",
+    "title": "Search"
+  },
+  "collections": {
+    "filter": "Filter",
+    "sort": "Sort by",
+    "clear": "Clear all",
+    "apply": "Apply",
+    "count": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    },
+    "all_concerns": "All",
+    "empty": "No products here yet."
+  },
+  "newsletter": {
+    "email": "Email address",
+    "subscribe": "Subscribe",
+    "success": "Thanks for subscribing."
+  },
+  "contact": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message",
+    "send": "Send message",
+    "success": "Thanks. We will get back to you within two business days."
+  },
+  "quiz": {
+    "back": "Back",
+    "continue": "Continue",
+    "see_results": "See my routine",
+    "restart": "Start over",
+    "add_routine": "Add routine to bag",
+    "step_of": "Step {{ step }} of {{ total }}",
+    "edit_answers": "Edit answers",
+    "question": "Question",
+    "of": "of",
+    "your_routine": "Your routine"
+  },
+  "blogs": {
+    "read_more": "Read more",
+    "back": "Back to journal"
+  },
+  "templates": {
+    "404_title": "This page dissolved",
+    "404_text": "The page you are looking for does not exist or was moved."
+  },
+  "password": {
+    "enter": "Enter using password",
+    "password": "Password",
+    "submit": "Enter",
+    "owner": "Are you the store owner?",
+    "login": "Log in here"
+  },
+  "gift_cards": {
+    "title": "Your gift card",
+    "code": "Code",
+    "print": "Print",
+    "balance": "Balance"
+  },
+  "localization": {
+    "label": "Country and currency",
+    "search": "Search countries",
+    "country": "Country / currency",
+    "language": "Language"
+  }
+}

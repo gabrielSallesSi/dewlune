@@ -1,0 +1,33 @@
+{%- if predictive_search.performed -%}
+  <div class="predictive" id="predictive-search-results">
+    {%- if predictive_search.resources.products.size > 0 -%}
+      <p class="predictive__heading">{{ 'search.products' | t }}</p>
+      <ul class="predictive__list" role="list">
+        {%- for product in predictive_search.resources.products -%}
+          <li class="predictive__item" style="--i: {{ forloop.index }}">
+            <a href="{{ product.url }}">
+              {% render 'branded-product-image', product: product, loading: 'lazy', width: 160, sizes: '160px' %}
+              <span>
+                <strong>{{ product.title }}</strong>
+                <small>{{ product.type }} &middot; {{ product.price | money }}</small>
+              </span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    {%- if predictive_search.resources.pages.size > 0 -%}
+      <p class="predictive__heading">{{ 'search.pages' | t }}</p>
+      <ul class="predictive__pages" role="list">
+        {%- for page in predictive_search.resources.pages -%}
+          <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    {%- if predictive_search.resources.products.size == 0 and predictive_search.resources.pages.size == 0 -%}
+      <p class="predictive__empty">{{ 'search.no_results' | t: terms: predictive_search.terms }}</p>
+    {%- else -%}
+      <a class="predictive__all" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product">{{ 'search.view_all' | t }} {% render 'icon', icon: 'arrow' %}</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

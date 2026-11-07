@@ -1,0 +1,81 @@
+<section class="section glossary" data-glossary>
+  <div class="container">
+    <div class="glossary__head">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h1 class="h1"><span class="blur-text" data-blur-text>{{ section.settings.heading }}</span></h1>
+      {%- if section.settings.text != blank -%}<p class="glossary__intro">{{ section.settings.text }}</p>{%- endif -%}
+      <div class="field-pill glossary__search">
+        {% render 'icon', icon: 'search' %}
+        <label class="visually-hidden" for="GlossarySearch">{{ 'general.search' | t }}</label>
+        <input id="GlossarySearch" type="search" placeholder="{{ section.settings.placeholder | escape }}" data-glossary-search autocomplete="off">
+      </div>
+      <p class="glossary__count" aria-live="polite"><span data-glossary-count>{{ section.blocks.size }}</span> {{ section.settings.count_label }}</p>
+    </div>
+
+    <div class="glossary__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign tag = 'ing:' | append: block.settings.handle
+          assign used_in = ''
+          for p in collections.all.products
+            if p.tags contains tag
+              assign used_in = used_in | append: p.title | append: ', '
+            endif
+          endfor
+          assign used_size = used_in | size | minus: 2
+          if used_size > 0
+            assign used_in = used_in | slice: 0, used_size
+          endif
+        -%}
+        <div class="glossary__item" style="--i: {{ forloop.index0 | modulo: 6 }}" data-reveal {{ block.shopify_attributes }}>
+          {% render 'ingredient', handle: block.settings.handle, style: 'card', products: used_in %}
+        </div>
+      {%- endfor -%}
+    </div>
+    <p class="glossary__empty" data-glossary-empty hidden>{{ section.settings.empty }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ingredient glossary",
+  "class": "section-glossary",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Glossary" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Every ingredient, in plain words" },
+    { "type": "textarea", "id": "text", "label": "Text", "info": "Products link here through tags like ing:squalane.", "default": "What each active does, where it comes from and which formulas use it." },
+    { "type": "text", "id": "placeholder", "label": "Search placeholder", "default": "Search an ingredient or a benefit" },
+    { "type": "text", "id": "count_label", "label": "Count label", "default": "ingredients" },
+    { "type": "text", "id": "empty", "label": "No results text", "default": "Nothing matched. Try hydration, barrier or antioxidant." }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "settings": [
+        {
+          "type": "select",
+          "id": "handle",
+          "label": "Ingredient",
+          "options": [
+            { "value": "vitamin-c", "label": "Vitamin C" },
+            { "value": "ferulic-acid", "label": "Ferulic acid" },
+            { "value": "hyaluronic-acid", "label": "Hyaluronic acid" },
+            { "value": "panthenol", "label": "Panthenol" },
+            { "value": "niacinamide", "label": "Niacinamide" },
+            { "value": "ceramides", "label": "Ceramides" },
+            { "value": "squalane", "label": "Squalane" },
+            { "value": "bakuchiol", "label": "Bakuchiol" },
+            { "value": "rosehip-oil", "label": "Rosehip oil" },
+            { "value": "zinc-oxide", "label": "Zinc oxide" },
+            { "value": "glycerin", "label": "Glycerin" },
+            { "value": "allantoin", "label": "Allantoin" }
+          ],
+          "default": "vitamin-c"
+        }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Ingredient glossary", "blocks": [ { "type": "ingredient" } ] } ]
+}
+{% endschema %}

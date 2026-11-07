@@ -1,0 +1,81 @@
+{
+  "sections": {
+    "intro": {
+      "type": "statement",
+      "settings": {
+        "eyebrow": "Our story",
+        "text": "Dewlune started with a bathroom shelf of half finished bottles and a simple question: which of these is actually doing something? We now make six formulas and tell you exactly what is in each one.",
+        "signature": "",
+        "size": 40
+      }
+    },
+    "iwt1": {
+      "type": "image-with-text",
+      "settings": {
+        "image_url": "https://images.unsplash.com/photo-1603401712778-ab0575182f12",
+        "image_alt": "Three dabs of cream on an arm resting on linen",
+        "eyebrow": "Disclosure",
+        "heading": "Percentages on the front",
+        "text": "<p>Every key active and its concentration is printed on the front of the pack, not hidden in the INCI list. If a number matters, you should be able to see it.</p>",
+        "flip": false
+      }
+    },
+    "iwt2": {
+      "type": "image-with-text",
+      "settings": {
+        "image_url": "https://images.unsplash.com/photo-1578583316094-043603e4386c",
+        "image_alt": "Soft leaf shadows on a warm beige wall",
+        "eyebrow": "Restraint",
+        "heading": "Six formulas is enough",
+        "text": "<p>A cleanser, two serums, a cream, an oil and a mineral sunscreen cover a complete routine. We would rather refine these than launch a seventh.</p>",
+        "flip": true,
+        "button_label": "Meet the formulas",
+        "button_link": "/collections/all"
+      }
+    },
+    "iwt3": {
+      "type": "image-with-text",
+      "settings": {
+        "image_url": "https://images.unsplash.com/photo-1763503839418-2b45c3d7a3c3",
+        "image_alt": "Open jar of white cream floating above a rock",
+        "eyebrow": "Refill",
+        "heading": "Keep the jar",
+        "text": "<p>Cloud Cream and both serums come in refill pods, so the glass stays on your shelf.</p>",
+        "flip": false
+      }
+    },
+    "marquee": {
+      "type": "scroll-marquee",
+      "blocks": {
+        "r1": {
+          "type": "row",
+          "settings": {
+            "items": "Disclosed,Concentrated,Fragrance free,Refillable",
+            "style": "regular"
+          }
+        }
+      },
+      "block_order": [
+        "r1"
+      ],
+      "settings": {
+        "velocity": 50,
+        "size": 64
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "image_url": "https://images.unsplash.com/photo-1600172454132-ada7faa101cf"
+      }
+    }
+  },
+  "order": [
+    "intro",
+    "iwt1",
+    "iwt2",
+    "iwt3",
+    "marquee",
+    "newsletter"
+  ]
+}

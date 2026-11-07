@@ -1,0 +1,33 @@
+{
+  "current": {
+    "color_background": "#F4EEE7",
+    "color_surface": "#FBF8F4",
+    "color_ink": "#2B211C",
+    "color_muted": "#7A6C62",
+    "color_accent": "#A0552A",
+    "color_accent_soft": "#F1D9C6",
+    "color_sage": "#8C9A83",
+    "color_line": "#E2D6CA",
+    "enable_motion": true,
+    "enable_webgl": true,
+    "cart_type": "drawer",
+    "free_shipping_threshold": 75,
+    "ritual_discount_note": "Ritual savings of 15% applied at 3+ products",
+    "social_instagram": "https://www.instagram.com",
+    "social_tiktok": "https://www.tiktok.com",
+    "social_pinterest": "https://www.pinterest.com",
+    "social_youtube": "https://www.youtube.com"
+  },
+  "presets": {
+    "Default": {
+      "color_background": "#F4EEE7",
+      "color_surface": "#FBF8F4",
+      "color_ink": "#2B211C",
+      "color_muted": "#7A6C62",
+      "color_accent": "#A0552A",
+      "color_accent_soft": "#F1D9C6",
+      "color_sage": "#8C9A83",
+      "color_line": "#E2D6CA"
+    }
+  }
+}

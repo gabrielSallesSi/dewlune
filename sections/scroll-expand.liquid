@@ -1,0 +1,61 @@
+{%- liquid
+  assign title_words = section.settings.title | split: ' '
+  assign half = title_words.size | divided_by: 2
+  if half < 1
+    assign half = 1
+  endif
+-%}
+<section class="scroll-expand" data-scroll-expand style="--se-length: {{ section.settings.length }}vh;">
+  <div class="scroll-expand__sticky">
+    <div class="scroll-expand__bg" aria-hidden="true">
+      {% render 'media', image: section.settings.bg_image, url: section.settings.bg_image_url, alt: '', sizes: '100vw' %}
+    </div>
+
+    <div class="scroll-expand__media">
+      {% render 'media', image: section.settings.image, url: section.settings.image_url, alt: section.settings.image_alt, sizes: '100vw', position: section.settings.position %}
+      <div class="scroll-expand__shade" aria-hidden="true"></div>
+      {%- if section.settings.date != blank -%}
+        <p class="scroll-expand__date">{{ section.settings.date }}</p>
+      {%- endif -%}
+    </div>
+
+    <h2 class="scroll-expand__title">
+      <span class="scroll-expand__word scroll-expand__word--left">{%- for w in title_words limit: half -%}{{ w }} {% endfor -%}</span>
+      <span class="scroll-expand__word scroll-expand__word--right">{%- for w in title_words offset: half -%}{{ w }} {% endfor -%}</span>
+    </h2>
+
+    <div class="scroll-expand__content">
+      <p>{{ section.settings.text }}</p>
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: '/pages/about' }}" class="hover-btn hover-btn--light">
+          <span class="hover-btn__dot" aria-hidden="true"></span>
+          <span class="hover-btn__label">{{ section.settings.button_label }}</span>
+          <span class="hover-btn__reveal" aria-hidden="true">{{ section.settings.button_label }}{% render 'icon', icon: 'arrow' %}</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Scroll media expansion",
+  "class": "section-scroll-expand",
+  "settings": [
+    { "type": "paragraph", "content": "Adapted from Scroll media expansion hero (21st.dev). The photo grows to full screen as the visitor scrolls." },
+    { "type": "image_picker", "id": "image", "label": "Main image" },
+    { "type": "text", "id": "image_url", "label": "Or Unsplash link", "default": "https://images.unsplash.com/photo-1728727267814-792db55ce678" },
+    { "type": "text", "id": "image_alt", "label": "Image description", "default": "Smiling woman with a dab of cream on her cheek" },
+    { "type": "select", "id": "position", "label": "Focal point", "options": [ { "value": "center top", "label": "Top" }, { "value": "center center", "label": "Center" }, { "value": "60% 30%", "label": "Face, slightly right" } ], "default": "60% 30%" },
+    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    { "type": "text", "id": "bg_image_url", "label": "Or background Unsplash link", "default": "https://images.unsplash.com/photo-1749143930790-65db0ee6d222" },
+    { "type": "text", "id": "title", "label": "Title", "info": "The words split apart while scrolling.", "default": "The quiet ritual" },
+    { "type": "text", "id": "date", "label": "Small label", "default": "Morning, 7:40" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Two minutes, four steps, no guesswork. A routine you will actually keep is the one that works." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Read our story" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Leave empty to link to /pages/about." },
+    { "type": "range", "id": "length", "label": "Scroll length", "min": 150, "max": 400, "step": 25, "unit": "vh", "default": 200 }
+  ],
+  "presets": [ { "name": "Scroll media expansion" } ]
+}
+{% endschema %}

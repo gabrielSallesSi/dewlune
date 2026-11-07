@@ -1,0 +1,105 @@
+<!doctype html>
+<html class="no-js{% if settings.enable_motion %} motion-ok{% endif %}" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_background }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; {{ 'general.tagged' | t: tags: current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'meta-tags' %}
+
+    {{ 'fraunces.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'manrope.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+
+    <style>
+      @font-face { font-family: 'Fraunces'; src: url('{{ 'fraunces.woff2' | asset_url }}') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+      @font-face { font-family: 'Fraunces'; src: url('{{ 'fraunces-italic.woff2' | asset_url }}') format('woff2'); font-weight: 100 900; font-style: italic; font-display: swap; }
+      @font-face { font-family: 'Manrope'; src: url('{{ 'manrope.woff2' | asset_url }}') format('woff2'); font-weight: 200 800; font-style: normal; font-display: swap; }
+      :root {
+        --c-bg: {{ settings.color_background }};
+        --c-surface: {{ settings.color_surface }};
+        --c-ink: {{ settings.color_ink }};
+        --c-muted: {{ settings.color_muted }};
+        --c-accent: {{ settings.color_accent }};
+        --c-peach: {{ settings.color_accent_soft }};
+        --c-sage: {{ settings.color_sage }};
+        --c-line: {{ settings.color_line }};
+        --c-ink-rgb: {{ settings.color_ink.red }}, {{ settings.color_ink.green }}, {{ settings.color_ink.blue }};
+        --c-accent-rgb: {{ settings.color_accent.red }}, {{ settings.color_accent.green }}, {{ settings.color_accent.blue }};
+      }
+    </style>
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'effects.css' | asset_url | stylesheet_tag }}
+    {{ 'chrome.css' | asset_url | stylesheet_tag }}
+
+    <script>
+      document.documentElement.classList.replace('no-js', 'js');
+      window.Dewlune = {
+        routes: {
+          root: {{ routes.root_url | json }},
+          cart: {{ routes.cart_url | json }},
+          cartAdd: {{ routes.cart_add_url | json }},
+          cartChange: {{ routes.cart_change_url | json }},
+          cartUpdate: {{ routes.cart_update_url | json }},
+          search: {{ routes.search_url | json }},
+          predictiveSearch: {{ routes.predictive_search_url | json }}
+        },
+        cartType: {{ settings.cart_type | json }},
+        moneyFormat: {{ shop.money_format | json }},
+        motion: {{ settings.enable_motion | json }},
+        webgl: {{ settings.enable_webgl | json }},
+        strings: {
+          added: {{ 'cart.added' | t | json }},
+          error: {{ 'cart.error' | t | json }},
+          soldOut: {{ 'products.sold_out' | t | json }},
+          addToCart: {{ 'products.add_to_cart' | t | json }},
+          unavailable: {{ 'products.unavailable' | t | json }},
+          quizBack: {{ 'quiz.back' | t | json }},
+          quizEditAnswers: {{ 'quiz.edit_answers' | t | json }},
+          quizQuestion: {{ 'quiz.question' | t | json }},
+          quizOf: {{ 'quiz.of' | t | json }},
+          quizYourRoutine: {{ 'quiz.your_routine' | t | json }}
+        }
+      };
+    </script>
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+    <script src="{{ 'effects.js' | asset_url }}" defer></script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}--{{ template.suffix }}{% endif %}">
+    <a class="skip-link" href="#MainContent">{{ 'general.skip' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="main" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {%- if settings.cart_type == 'drawer' -%}
+      {% section 'cart-drawer' %}
+    {%- endif -%}
+
+    <div class="toast" role="status" aria-live="polite" data-toast hidden></div>
+  </body>
+</html>

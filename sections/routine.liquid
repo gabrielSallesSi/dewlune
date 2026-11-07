@@ -1,0 +1,109 @@
+<section class="section routine" data-routine data-mode="am">
+  <div class="container routine__grid">
+    <div class="routine__media">
+      <div class="routine__img routine__img--am">
+        {% render 'media', image: section.settings.am_image, url: section.settings.am_image_url, alt: section.settings.am_alt, sizes: '(min-width: 990px) 50vw, 100vw', max: 3840 %}
+      </div>
+      <div class="routine__img routine__img--pm">
+        {% render 'media', image: section.settings.pm_image, url: section.settings.pm_image_url, alt: section.settings.pm_alt, sizes: '(min-width: 990px) 50vw, 100vw', max: 3840 %}
+      </div>
+    </div>
+
+    <div class="routine__panel">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h2 class="h2"><span class="blur-text" data-blur-text data-on-view>{{ section.settings.heading }}</span></h2>
+
+      <div class="ampm">
+        <label class="ampm__switch">
+          <input type="checkbox" data-routine-toggle aria-label="{{ section.settings.toggle_label | escape }}">
+          <span class="ampm__inner" data-off="AM" data-on="PM"></span>
+        </label>
+        <p class="ampm__hint" aria-live="polite">
+          <span class="ampm__hint--am">{% render 'icon', icon: 'sun' %} {{ section.settings.am_hint }}</span>
+          <span class="ampm__hint--pm">{% render 'icon', icon: 'moon' %} {{ section.settings.pm_hint }}</span>
+        </p>
+      </div>
+
+      <div class="checklist" data-checklist>
+        {%- assign am_ids = '' -%}
+        {%- assign pm_ids = '' -%}
+        {%- for block in section.blocks -%}
+          {%- assign p = block.settings.product -%}
+          {%- if p == blank and block.settings.handle != blank -%}{%- assign p = all_products[block.settings.handle] -%}{%- endif -%}
+          {%- liquid
+            if p != blank and p.selected_or_first_available_variant.available
+              assign vid = p.selected_or_first_available_variant.id | append: ','
+              if block.settings.time == 'am' or block.settings.time == 'both'
+                assign am_ids = am_ids | append: vid
+              endif
+              if block.settings.time == 'pm' or block.settings.time == 'both'
+                assign pm_ids = pm_ids | append: vid
+              endif
+            endif
+          -%}
+          <div class="checklist__row" data-time="{{ block.settings.time }}" {{ block.shopify_attributes }}>
+            <input type="checkbox" id="Step-{{ section.id }}-{{ forloop.index }}">
+            <label for="Step-{{ section.id }}-{{ forloop.index }}">
+              <span class="checklist__num" aria-hidden="true"></span>
+              <span class="checklist__text">
+                <strong>{{ block.settings.title }}</strong>
+                {%- if p != blank -%}<small>{{ p.title }}{% if block.settings.note != blank %} &middot; {{ block.settings.note }}{% endif %}</small>{%- elsif block.settings.note != blank -%}<small>{{ block.settings.note }}</small>{%- endif -%}
+              </span>
+            </label>
+            {%- if p != blank -%}
+              <a class="checklist__thumb" href="{{ p.url }}" tabindex="-1" aria-hidden="true">
+                {% render 'branded-product-image', product: p, width: 160, loading: 'lazy', alt: p.title, sizes: '64px' %}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="routine__actions">
+        <button type="button" class="shine-btn" data-add-routine data-am="{{ am_ids }}" data-pm="{{ pm_ids }}">
+          <span data-label-am>{{ section.settings.add_am }}</span>
+          <span data-label-pm>{{ section.settings.add_pm }}</span>
+          {% render 'icon', icon: 'arrow-circle' %}
+          <span class="dots-loader" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AM / PM routine",
+  "class": "section-routine",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Your routine" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Four steps, morning and night" },
+    { "type": "text", "id": "toggle_label", "label": "Toggle label", "default": "Switch between morning and evening routine" },
+    { "type": "text", "id": "am_hint", "label": "AM hint", "default": "Protect and brighten" },
+    { "type": "text", "id": "pm_hint", "label": "PM hint", "default": "Repair and replenish" },
+    { "type": "text", "id": "add_am", "label": "AM button", "default": "Add the AM routine" },
+    { "type": "text", "id": "add_pm", "label": "PM button", "default": "Add the PM routine" },
+    { "type": "image_picker", "id": "am_image", "label": "AM image" },
+    { "type": "text", "id": "am_image_url", "label": "Or AM Unsplash link", "default": "https://images.unsplash.com/photo-1576426863848-c21f53c60b19" },
+    { "type": "text", "id": "am_alt", "label": "AM image description", "default": "White dropper bottle with a gold collar in soft morning light" },
+    { "type": "image_picker", "id": "pm_image", "label": "PM image" },
+    { "type": "text", "id": "pm_image_url", "label": "Or PM Unsplash link", "default": "https://images.unsplash.com/photo-1608571702600-5a5419d31475" },
+    { "type": "text", "id": "pm_alt", "label": "PM image description", "default": "Amber dropper bottle in warm evening light" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Step", "default": "Cleanse" },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "handle", "label": "Or product handle", "info": "Used when no product is picked, for example cloud-cream." },
+        { "type": "text", "id": "note", "label": "Note", "default": "60 seconds, lukewarm water" },
+        { "type": "select", "id": "time", "label": "When", "options": [ { "value": "am", "label": "Morning" }, { "value": "pm", "label": "Evening" }, { "value": "both", "label": "Both" } ], "default": "both" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "AM / PM routine", "blocks": [ { "type": "step" } ] } ]
+}
+{% endschema %}

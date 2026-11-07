@@ -1,0 +1,320 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "image_url": "https://images.unsplash.com/photo-1748543668643-1ada33167539",
+        "mobile_image_url": "https://images.unsplash.com/photo-1608571424237-381e6b43a2a7",
+        "image_alt": "Golden serum, cream and green gel swatches on a warm peach surface",
+        "position": "right center",
+        "shade": 35,
+        "height": 100,
+        "eyebrow": "Six formulas. Every percentage on the label.",
+        "heading": "Skincare for skin that feels",
+        "rotating_words": "calm.,dewy.,even.,rested.",
+        "rotate_interval": 3,
+        "text": "Clean, concentrated formulas built around one idea: you should know exactly what you put on your skin.",
+        "button_label": "Shop the edit",
+        "button_link": "/collections/all",
+        "button2_label": "Take the skin quiz",
+        "button2_link": "/pages/skin-quiz",
+        "badge_text": "fragrance free * vegan * refillable * ",
+        "badge_speed": 20
+      }
+    },
+    "marquee": {
+      "type": "scroll-marquee",
+      "blocks": {
+        "r1": {
+          "type": "row",
+          "settings": {
+            "items": "Vitamin C,Squalane,Ceramides,Hyaluronic acid,Bakuchiol",
+            "style": "regular"
+          }
+        },
+        "r2": {
+          "type": "row",
+          "settings": {
+            "items": "Niacinamide,Rosehip oil,Zinc oxide,Panthenol,Ferulic acid",
+            "style": "italic"
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2"
+      ],
+      "settings": {
+        "label": "Ingredients we use",
+        "velocity": 60,
+        "size": 80
+      }
+    },
+    "edit": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "The edit",
+        "heading": "Six formulas, nothing filler",
+        "limit": 8,
+        "show_filters": true,
+        "link_label": "Shop everything"
+      }
+    },
+    "statement": {
+      "type": "statement",
+      "settings": {
+        "eyebrow": "Why Dewlune",
+        "text": "Most routines are louder than they need to be. We make six formulas, print every active percentage on the front, and leave out fragrance, so the only thing you notice is how your skin feels.",
+        "signature": "The Dewlune studio",
+        "size": 44
+      }
+    },
+    "concerns": {
+      "type": "concern-gallery",
+      "blocks": {
+        "c1": {
+          "type": "panel",
+          "settings": {
+            "label": "Dullness",
+            "description": "Vitamin C and ferulic acid",
+            "image_url": "https://images.unsplash.com/photo-1748543668687-624e058c367c",
+            "link": "/collections/all?concern=dullness"
+          }
+        },
+        "c2": {
+          "type": "panel",
+          "settings": {
+            "label": "Dryness",
+            "description": "Hyaluronic acid and ceramides",
+            "image_url": "https://images.unsplash.com/photo-1748543668646-e81cda0890f3",
+            "link": "/collections/all?concern=dryness"
+          }
+        },
+        "c3": {
+          "type": "panel",
+          "settings": {
+            "label": "Redness",
+            "description": "Panthenol and allantoin",
+            "image_url": "https://images.unsplash.com/photo-1558470570-c9a5a5ade867",
+            "link": "/collections/all?concern=redness"
+          }
+        },
+        "c4": {
+          "type": "panel",
+          "settings": {
+            "label": "Fine lines",
+            "description": "Bakuchiol and rosehip oil",
+            "image_url": "https://images.unsplash.com/photo-1773825441113-e6dc8cb1b501",
+            "link": "/collections/all?concern=fine-lines"
+          }
+        },
+        "c5": {
+          "type": "panel",
+          "settings": {
+            "label": "Sun care",
+            "description": "Mineral zinc oxide",
+            "image_url": "https://images.unsplash.com/photo-1748543669178-efd3de4e64e0",
+            "link": "/collections/all?concern=sun-care"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5"
+      ],
+      "settings": {
+        "eyebrow": "Shop by concern",
+        "heading": "Start with how your skin feels",
+        "text": "Hover or tap a panel to see the formulas built for it.",
+        "height": 540,
+        "default_index": 2
+      }
+    },
+    "stats": {
+      "type": "ingredient-stats",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "15",
+            "decimals": 0,
+            "suffix": "%",
+            "label": "Vitamin C in Amber Glow Serum",
+            "product": "amber-glow-serum",
+            "image_url": "https://images.unsplash.com/photo-1748543668699-a8a9398e9161"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "2",
+            "decimals": 0,
+            "suffix": "%",
+            "label": "Hyaluronic acid complex in Hydra Veil Serum",
+            "product": "hydra-veil-serum",
+            "image_url": "https://images.unsplash.com/photo-1748543668676-ea8241cb3886"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "3",
+            "decimals": 0,
+            "suffix": "%",
+            "label": "Ceramides in Cloud Cream",
+            "product": "cloud-cream",
+            "image_url": "https://images.unsplash.com/photo-1608068811588-3a67006b7489"
+          }
+        },
+        "s4": {
+          "type": "stat",
+          "settings": {
+            "value": "5.5",
+            "decimals": 1,
+            "suffix": " pH",
+            "label": "Skin friendly pH of Soft Gel Cleanser",
+            "product": "soft-gel-cleanser",
+            "image_url": "https://images.unsplash.com/photo-1748543668643-1ada33167539"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {
+        "eyebrow": "Full disclosure",
+        "heading": "The numbers on the front",
+        "text": "Each formula is built around a small number of actives at a stated concentration. No proprietary blends."
+      }
+    },
+    "routine": {
+      "type": "routine",
+      "blocks": {
+        "st1": {
+          "type": "step",
+          "settings": {
+            "title": "Cleanse",
+            "note": "60 seconds, lukewarm water",
+            "time": "both",
+            "handle": "soft-gel-cleanser"
+          }
+        },
+        "st2": {
+          "type": "step",
+          "settings": {
+            "title": "Brighten",
+            "note": "3 to 4 drops",
+            "time": "am",
+            "handle": "amber-glow-serum"
+          }
+        },
+        "st3": {
+          "type": "step",
+          "settings": {
+            "title": "Hydrate",
+            "note": "On damp skin",
+            "time": "pm",
+            "handle": "hydra-veil-serum"
+          }
+        },
+        "st4": {
+          "type": "step",
+          "settings": {
+            "title": "Moisturize",
+            "note": "A pea sized amount",
+            "time": "both",
+            "handle": "cloud-cream"
+          }
+        },
+        "st5": {
+          "type": "step",
+          "settings": {
+            "title": "Protect",
+            "note": "Last step, every morning",
+            "time": "am",
+            "handle": "daily-veil-spf-30"
+          }
+        },
+        "st6": {
+          "type": "step",
+          "settings": {
+            "title": "Seal",
+            "note": "2 drops pressed in",
+            "time": "pm",
+            "handle": "moonset-face-oil"
+          }
+        }
+      },
+      "block_order": [
+        "st1",
+        "st2",
+        "st3",
+        "st4",
+        "st5",
+        "st6"
+      ],
+      "settings": {
+        "eyebrow": "Your routine",
+        "heading": "Four steps, morning and night",
+        "am_image_url": "https://images.unsplash.com/photo-1576426863848-c21f53c60b19",
+        "pm_image_url": "https://images.unsplash.com/photo-1690368892771-566e77c3b352",
+        "am_alt": "White dropper bottle with a gold collar in soft morning light",
+        "pm_alt": "Amber dropper bottle lying on a warm surface"
+      }
+    },
+    "expand": {
+      "type": "scroll-expand",
+      "settings": {
+        "image_url": "https://images.unsplash.com/photo-1728727267814-792db55ce678",
+        "image_alt": "Smiling woman with a dab of cream on her cheek",
+        "bg_image_url": "https://images.unsplash.com/photo-1749143930790-65db0ee6d222",
+        "title": "The quiet ritual",
+        "date": "Morning, 7:40",
+        "text": "Two minutes, four steps, no guesswork. A routine you will actually keep is the one that works.",
+        "button_label": "Read our story",
+        "button_link": "/pages/about",
+        "position": "60% 30%",
+        "length": 200
+      }
+    },
+    "quiz": {
+      "type": "quiz-teaser",
+      "settings": {
+        "tint": "#F2D2BC",
+        "speed": 6
+      }
+    },
+    "builder": {
+      "type": "ritual-builder",
+      "settings": {
+        "count": 3,
+        "discount": 15
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "image_url": "https://images.unsplash.com/photo-1578583316094-043603e4386c"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "marquee",
+    "edit",
+    "statement",
+    "concerns",
+    "stats",
+    "routine",
+    "expand",
+    "quiz",
+    "builder",
+    "newsletter"
+  ]
+}

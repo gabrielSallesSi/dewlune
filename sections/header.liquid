@@ -1,0 +1,304 @@
+{%- liquid
+  assign overlay = false
+  if section.settings.transparent_home and template.name == 'index'
+    assign overlay = true
+  endif
+
+  comment
+    Navigation comes from the custom list (no admin setup needed) or from a Shopify menu.
+  endcomment
+  assign sep = '~~'
+  assign nav_titles = ''
+  assign nav_urls = ''
+  if section.settings.nav_source == 'custom' and section.settings.nav_links != blank
+    assign lines = section.settings.nav_links | newline_to_br | split: '<br />'
+    for line in lines
+      assign parts = line | split: '|'
+      assign t = parts[0] | strip
+      assign u = parts[1] | strip
+      if t != blank and u != blank
+        assign nav_titles = nav_titles | append: t | append: sep
+        assign nav_urls = nav_urls | append: u | append: sep
+      endif
+    endfor
+  else
+    for link in section.settings.menu.links
+      assign nav_titles = nav_titles | append: link.title | append: sep
+      assign nav_urls = nav_urls | append: link.url | append: sep
+    endfor
+  endif
+  assign nav_titles = nav_titles | split: sep
+  assign nav_urls = nav_urls | split: sep
+  assign triggers = section.settings.mega_trigger | downcase | split: ','
+
+  assign mega_collection = section.settings.mega_collection
+  if mega_collection == blank
+    assign mega_collection = collections.all
+  endif
+  assign links_1 = section.settings.mega_links_1 | newline_to_br | split: '<br />'
+  assign links_2 = section.settings.mega_links_2 | newline_to_br | split: '<br />'
+  assign trending = section.settings.trending | split: ','
+  assign show_loc = false
+  if section.settings.show_localization and localization.available_countries.size > 0
+    assign show_loc = true
+  endif
+-%}
+<header class="header{% if overlay %} header--overlay{% endif %}{% if section.settings.glass %} header--glass{% endif %}" data-header>
+  <div class="header__shell">
+    <div class="header__inner container">
+      <div class="header__left">
+        <button class="icon-btn header__menu-btn" type="button" data-drawer-open="MenuDrawer" aria-controls="MenuDrawer" aria-expanded="false">
+          {% render 'icon', icon: 'menu' %}<span class="visually-hidden">{{ 'general.menu' | t }}</span>
+        </button>
+        <nav class="header__nav" aria-label="Main">
+          <ul role="list">
+            {%- for title in nav_titles -%}
+              {%- assign url = nav_urls[forloop.index0] -%}
+              {%- assign key = title | downcase | strip -%}
+              {%- assign is_mega = false -%}
+              {%- for trig in triggers -%}{%- assign trig_key = trig | strip -%}{%- if trig_key == key -%}{%- assign is_mega = true -%}{%- endif -%}{%- endfor -%}
+              <li{% if is_mega %} class="has-mega"{% endif %}>
+                <a href="{{ url }}"{% if request.path == url %} aria-current="page"{% endif %}{% if is_mega %} data-mega-trigger aria-haspopup="true" aria-expanded="false" aria-controls="MegaMenu"{% endif %}>
+                  {{ title }}
+                  {%- if is_mega -%}{% render 'icon', icon: 'chevron' %}{%- endif -%}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      </div>
+
+      <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name | escape }}">
+        {%- if section.settings.logo != blank -%}
+          {%- assign logo_width = section.settings.logo_width -%}
+          {{ section.settings.logo | image_url: width: 400 | image_tag: width: logo_width, alt: shop.name, loading: 'eager' }}
+        {%- else -%}
+          <span class="wordmark">{{ shop.name | downcase }}</span>
+        {%- endif -%}
+      </a>
+
+      <div class="header__right">
+        {%- if show_loc -%}
+          <div class="header__loc">{% render 'localization', id: 'HeaderLoc' %}</div>
+        {%- endif -%}
+        <button class="icon-btn" type="button" data-search-open aria-controls="SearchModal">
+          {% render 'icon', icon: 'search' %}<span class="visually-hidden">{{ 'general.search' | t }}</span>
+        </button>
+        {%- if shop.customer_accounts_enabled -%}
+          <a class="icon-btn header__account" href="{{ routes.account_url }}">
+            {% render 'icon', icon: 'user' %}<span class="visually-hidden">{{ 'general.account' | t }}</span>
+          </a>
+        {%- endif -%}
+        <a class="icon-btn header__cart" href="{{ routes.cart_url }}" data-cart-open>
+          {% render 'icon', icon: 'bag' %}
+          <span class="visually-hidden">{{ 'general.cart' | t }}</span>
+          <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+        </a>
+      </div>
+    </div>
+
+    {%- comment -%} Mega menu: adapted from React Bits CardNav {%- endcomment -%}
+    <div class="mega" id="MegaMenu" data-mega aria-hidden="true">
+      <div class="mega__inner">
+        <div class="mega__grid container">
+          <div class="mega__lists">
+            {%- if section.settings.mega_heading_1 != blank -%}
+              <div class="mega__card mega__card--list" style="--i: 0">
+                <p class="mega__label">{{ section.settings.mega_heading_1 }}</p>
+                <ul role="list">
+                  {%- for line in links_1 -%}
+                    {%- assign parts = line | split: '|' -%}
+                    {%- assign t = parts[0] | strip -%}
+                    {%- assign u = parts[1] | strip -%}
+                    {%- if t != blank -%}<li><a href="{{ u }}">{{ t }}{% render 'icon', icon: 'arrow' %}</a></li>{%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.mega_heading_2 != blank -%}
+              <div class="mega__card mega__card--list" style="--i: 1">
+                <p class="mega__label">{{ section.settings.mega_heading_2 }}</p>
+                <ul role="list">
+                  {%- for line in links_2 -%}
+                    {%- assign parts = line | split: '|' -%}
+                    {%- assign t = parts[0] | strip -%}
+                    {%- assign u = parts[1] | strip -%}
+                    {%- if t != blank -%}<li><a href="{{ u }}">{{ t }}{% render 'icon', icon: 'arrow' %}</a></li>{%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <ul class="mega__products" role="list">
+            {%- for product in mega_collection.products limit: 4 -%}
+              {%- if product.tags contains 'bundle' -%}{%- continue -%}{%- endif -%}
+              <li class="mega__card mega__product" style="--i: {{ forloop.index | plus: 1 }}">
+                <a href="{{ product.url }}">
+                  <span class="mega__product-img">
+                    {% render 'branded-product-image', product: product, loading: 'lazy', sizes: '200px' %}
+                  </span>
+                  <span class="mega__product-vendor">{{ product.vendor | escape }}</span>
+                  <span class="mega__product-name">{{ product.title | escape }}</span>
+                  <span class="mega__product-meta">{% if product.type != blank %}{{ product.type | escape }} &middot; {% endif %}{{ product.price | money }}</span>
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- if section.settings.feature_title != blank -%}
+            <a class="mega__card mega__feature" href="{{ section.settings.feature_link | default: '/pages/skin-quiz' }}" style="--i: 6">
+              <span class="mega__feature-img" aria-hidden="true">
+                {% render 'media', image: section.settings.feature_image, url: section.settings.feature_image_url, alt: '', sizes: '360px', max: 1080 %}
+              </span>
+              <span class="mega__feature-body">
+                <strong>{{ section.settings.feature_title }}</strong>
+                <span>{{ section.settings.feature_text }}</span>
+                <span class="mega__feature-cta">{{ section.settings.feature_cta }} {% render 'icon', icon: 'arrow' %}</span>
+              </span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mega-scrim" data-mega-scrim aria-hidden="true"></div>
+</header>
+
+<svg class="glass-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <filter id="dw-glass" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+    <feImage x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map" data-glass-map />
+    <feDisplacementMap in="SourceGraphic" in2="map" scale="-40" xChannelSelector="R" yChannelSelector="B" result="dr" />
+    <feColorMatrix in="dr" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" />
+    <feDisplacementMap in="SourceGraphic" in2="map" scale="-36" xChannelSelector="R" yChannelSelector="B" result="dg" />
+    <feColorMatrix in="dg" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g" />
+    <feDisplacementMap in="SourceGraphic" in2="map" scale="-32" xChannelSelector="R" yChannelSelector="B" result="db" />
+    <feColorMatrix in="db" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" />
+    <feBlend in="r" in2="g" mode="screen" result="rg" />
+    <feBlend in="rg" in2="b" mode="screen" result="out" />
+    <feGaussianBlur in="out" stdDeviation="0.6" />
+  </filter>
+</svg>
+
+<div class="drawer drawer--left" id="MenuDrawer" data-drawer aria-hidden="true">
+  <div class="drawer__overlay" data-drawer-close></div>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'general.menu' | t }}" tabindex="-1">
+    <div class="drawer__head">
+      <span class="wordmark wordmark--sm">{{ shop.name | downcase }}</span>
+      <button class="icon-btn" type="button" data-drawer-close>{% render 'icon', icon: 'close' %}<span class="visually-hidden">{{ 'general.close' | t }}</span></button>
+    </div>
+    <div class="menu-drawer__scroll">
+      <nav class="menu-drawer__nav" aria-label="Mobile">
+        <ul role="list">
+          {%- for title in nav_titles -%}
+            <li style="--i: {{ forloop.index }}"><a href="{{ nav_urls[forloop.index0] }}">{{ title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+      <div class="menu-drawer__products">
+        <p class="mega__label">{{ section.settings.drawer_products_heading }}</p>
+        <ul role="list">
+          {%- for product in mega_collection.products limit: 6 -%}
+            {%- if product.tags contains 'bundle' -%}{%- continue -%}{%- endif -%}
+            <li>
+              <a href="{{ product.url }}">
+                {% render 'branded-product-image', product: product, loading: 'lazy', sizes: '120px' %}
+                <span>{{ product.title }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+    <div class="menu-drawer__foot">
+      {%- if show_loc -%}{% render 'localization', id: 'DrawerLoc', up: true %}{%- endif -%}
+      {%- if section.settings.drawer_note != blank -%}<p class="menu-drawer__note">{{ section.settings.drawer_note }}</p>{%- endif -%}
+    </div>
+  </div>
+</div>
+
+<div class="search-modal" id="SearchModal" data-search-modal aria-hidden="true">
+  <div class="search-modal__overlay" data-search-close></div>
+  <div class="search-modal__panel" role="dialog" aria-modal="true" aria-label="{{ 'general.search' | t }}">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-modal__form">
+      <input type="hidden" name="type" value="product">
+      <label class="visually-hidden" for="PredictiveSearchInput">{{ 'general.search' | t }}</label>
+      {% render 'icon', icon: 'search' %}
+      <input id="PredictiveSearchInput" type="search" name="q" autocomplete="off" placeholder="{{ 'search.placeholder' | t }}" data-predictive-input>
+      <button class="icon-btn" type="button" data-search-close>{% render 'icon', icon: 'close' %}<span class="visually-hidden">{{ 'general.close' | t }}</span></button>
+    </form>
+    <div class="search-suggest" data-search-suggest>
+      {%- if trending.size > 0 -%}
+        <p class="predictive__heading">{{ section.settings.trending_heading }}</p>
+        <ul class="search-suggest__chips" role="list">
+          {%- for term in trending -%}
+            {%- assign term_clean = term | strip -%}
+            <li style="--i: {{ forloop.index }}"><button type="button" class="chip" data-search-term="{{ term_clean | escape }}">{% render 'icon', icon: 'search' %}{{ term_clean }}</button></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <p class="predictive__heading">{{ section.settings.popular_heading }}</p>
+      <ul class="search-suggest__products" role="list">
+        {%- for product in mega_collection.products limit: 4 -%}
+          <li style="--i: {{ forloop.index }}">
+            <a href="{{ product.url }}">
+              <span class="search-suggest__img">
+                {% render 'branded-product-image', product: product, loading: 'lazy', sizes: '160px' %}
+              </span>
+              <strong>{{ product.title }}</strong>
+              <small>{{ product.price | money }}</small>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    <div class="search-modal__results" data-predictive-results></div>
+  </div>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    "url": {{ request.origin | append: routes.root_url | json }}
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    { "type": "header", "content": "Navigation" },
+    { "type": "select", "id": "nav_source", "label": "Links come from", "options": [ { "value": "custom", "label": "List below" }, { "value": "menu", "label": "Shopify menu" } ], "default": "custom" },
+    { "type": "textarea", "id": "nav_links", "label": "Links", "info": "One per line: Label | /url", "default": "Shop | /collections/all\nSkin quiz | /pages/skin-quiz\nIngredients | /pages/ingredients\nAbout | /pages/about" },
+    { "type": "link_list", "id": "menu", "label": "Shopify menu", "default": "main-menu" },
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "range", "id": "logo_width", "label": "Logo width", "min": 60, "max": 240, "step": 5, "unit": "px", "default": 120 },
+    { "type": "checkbox", "id": "transparent_home", "label": "Transparent over the home hero", "default": true },
+    { "type": "checkbox", "id": "glass", "label": "Shrink into a glass bar on scroll", "info": "Adapted from React Bits GlassSurface.", "default": true },
+    { "type": "checkbox", "id": "show_localization", "label": "Show country and currency selector", "info": "Lists the countries in your Markets.", "default": true },
+    { "type": "header", "content": "Mega menu (CardNav)" },
+    { "type": "text", "id": "mega_trigger", "label": "Opens on these links", "info": "Link labels, separated by commas.", "default": "Shop,Catalog" },
+    { "type": "collection", "id": "mega_collection", "label": "Products to show" },
+    { "type": "text", "id": "mega_heading_1", "label": "List 1 heading", "default": "Shop by concern" },
+    { "type": "textarea", "id": "mega_links_1", "label": "List 1 links", "info": "One per line: Label | /url", "default": "All formulas | /collections/all\nDullness | /collections/all?concern=dullness\nDryness | /collections/all?concern=dryness\nRedness | /collections/all?concern=redness\nFine lines | /collections/all?concern=fine-lines\nSun care | /collections/all?concern=sun-care" },
+    { "type": "text", "id": "mega_heading_2", "label": "List 2 heading", "default": "Discover" },
+    { "type": "textarea", "id": "mega_links_2", "label": "List 2 links", "info": "One per line: Label | /url", "default": "Skin quiz | /pages/skin-quiz\nBuild your ritual | /pages/build-your-ritual\nIngredient glossary | /pages/ingredients\nThe Daily Ritual Set | /products/the-daily-ritual-set" },
+    { "type": "image_picker", "id": "feature_image", "label": "Feature card image" },
+    { "type": "text", "id": "feature_image_url", "label": "Or Unsplash link", "default": "https://images.unsplash.com/photo-1748543668676-ea8241cb3886" },
+    { "type": "text", "id": "feature_title", "label": "Feature title", "default": "Not sure where to start?" },
+    { "type": "text", "id": "feature_text", "label": "Feature text", "default": "Four questions, one routine built for your skin." },
+    { "type": "text", "id": "feature_cta", "label": "Feature button", "default": "Take the quiz" },
+    { "type": "url", "id": "feature_link", "label": "Feature link", "info": "Leave empty to link to /pages/skin-quiz." },
+    { "type": "header", "content": "Search" },
+    { "type": "text", "id": "trending_heading", "label": "Trending heading", "default": "Trending" },
+    { "type": "text", "id": "trending", "label": "Trending searches", "info": "Separated by commas.", "default": "Vitamin C,Niacinamide,Squalane,Ceramides,SPF" },
+    { "type": "text", "id": "popular_heading", "label": "Products heading", "default": "Most loved" },
+    { "type": "header", "content": "Mobile menu" },
+    { "type": "text", "id": "drawer_products_heading", "label": "Products heading", "default": "The formulas" },
+    { "type": "text", "id": "drawer_note", "label": "Menu drawer note", "default": "Fewer products. Every percentage on the label." }
+  ]
+}
+{% endschema %}

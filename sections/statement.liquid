@@ -1,0 +1,23 @@
+<section class="section statement" style="--statement-size: {{ section.settings.size }}px;">
+  <div class="container container--narrow">
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    <p class="statement__text scroll-reveal" data-scroll-reveal>{{ section.settings.text }}</p>
+    {%- if section.settings.signature != blank -%}
+      <p class="statement__sig">{{ section.settings.signature }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Statement (ScrollReveal)",
+  "class": "section-statement",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Dewlune" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Most routines are louder than they need to be. We make six formulas, print every active percentage on the front, and leave out fragrance, so the only thing you notice is how your skin feels." },
+    { "type": "text", "id": "signature", "label": "Signature", "default": "The Dewlune studio" },
+    { "type": "range", "id": "size", "label": "Text size", "min": 24, "max": 64, "step": 2, "unit": "px", "default": 44 }
+  ],
+  "presets": [ { "name": "Statement (ScrollReveal)" } ]
+}
+{% endschema %}

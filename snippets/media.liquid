@@ -1,0 +1,77 @@
+{%- comment -%}
+  Responsive image from an uploaded image or an Unsplash link.
+  Serves widths up to 3840 px, so 4K and high-density screens get full detail.
+
+  Accepts:
+  - image: image object (takes priority)
+  - url: Unsplash image URL (images.unsplash.com/photo-...)
+  - alt: alt text
+  - sizes: sizes attribute (default 100vw)
+  - class: class on the <img>
+  - priority: true for above-the-fold images
+  - max: largest width to request (default 3840)
+  - position: CSS object-position
+{%- endcomment -%}
+{%- liquid
+  assign sizes = sizes | default: '100vw'
+  assign max = max | default: 3840
+  assign widths = '480,768,1080,1440,1920,2560,3200,3840' | split: ','
+  if priority
+    assign loading = 'eager'
+    assign fetch = 'high'
+  else
+    assign loading = 'lazy'
+    assign fetch = 'auto'
+  endif
+  assign style = ''
+  if position != blank
+    assign style = 'object-position: ' | append: position | append: ';'
+  endif
+-%}
+{%- if image != blank -%}
+  {%- assign alt_text = alt | default: image.alt | escape -%}
+  {{
+    image
+    | image_url: width: max
+    | image_tag:
+      widths: '480, 768, 1080, 1440, 1920, 2560, 3200, 3840',
+      sizes: sizes,
+      loading: loading,
+      fetchpriority: fetch,
+      class: class,
+      alt: alt_text,
+      style: style
+  }}
+{%- elsif url != blank -%}
+  {%- liquid
+    assign base = url | split: '?' | first
+    assign srcset = ''
+    for w in widths
+      assign wn = w | plus: 0
+      if wn <= max
+        assign entry = base | append: '?auto=format&fit=crop&q=82&w=' | append: w | append: ' ' | append: w | append: 'w'
+        if srcset == ''
+          assign srcset = entry
+        else
+          assign srcset = srcset | append: ', ' | append: entry
+        endif
+      endif
+    endfor
+    assign fallback = base | append: '?auto=format&fit=crop&q=82&w=1920'
+  -%}
+  <img
+    src="{{ fallback }}"
+    srcset="{{ srcset }}"
+    sizes="{{ sizes }}"
+    alt="{{ alt | escape }}"
+    width="{{ width | default: 1920 }}"
+    height="{{ height | default: 1280 }}"
+    loading="{{ loading }}"
+    fetchpriority="{{ fetch }}"
+    decoding="async"
+    {% if class != blank %}class="{{ class }}"{% endif %}
+    {% if style != blank %}style="{{ style }}"{% endif %}
+  >
+{%- else -%}
+  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+{%- endif -%}

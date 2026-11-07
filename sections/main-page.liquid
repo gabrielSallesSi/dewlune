@@ -1,0 +1,10 @@
+<section class="section page-main">
+  <div class="container container--narrow">
+    <h1 class="h1"><span class="blur-text" data-blur-text>{{ page.title }}</span></h1>
+    <div class="rte">{{ page.content }}</div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Page", "class": "section-main-page", "settings": [] }
+{% endschema %}

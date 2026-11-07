@@ -1,0 +1,36 @@
+<section class="section iri-band" data-iridescence-host>
+  <div class="iridescence" data-iridescence data-color="{{ section.settings.tint }}" data-speed="{{ section.settings.speed | divided_by: 10.0 }}" aria-hidden="true">
+    <canvas></canvas>
+  </div>
+  <div class="iri-band__fallback" aria-hidden="true"></div>
+  <div class="container container--narrow iri-band__inner">
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+    <h2 class="h1"><span class="blur-text" data-blur-text data-on-view>{{ section.settings.heading }}</span></h2>
+    {%- if section.settings.text != blank -%}<p class="iri-band__text">{{ section.settings.text }}</p>{%- endif -%}
+    {%- if section.settings.button_label != blank -%}
+      <a href="{{ section.settings.button_link | default: '/pages/skin-quiz' }}" class="shine-btn shine-btn--dark">
+        {{ section.settings.button_label }}
+        {% render 'icon', icon: 'arrow-circle' %}
+      </a>
+    {%- endif -%}
+    {%- if section.settings.note != blank -%}<p class="iri-band__note">{{ section.settings.note }}</p>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Quiz teaser (Iridescence)",
+  "class": "section-iri",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "60 second skin quiz" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Not sure where to start?" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Three questions about how your skin behaves. We build a routine from the answers, and you can add all of it in one tap." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Find my routine" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Leave empty to link to /pages/skin-quiz." },
+    { "type": "text", "id": "note", "label": "Small note", "default": "Move your cursor over the background. Click to stir it." },
+    { "type": "color", "id": "tint", "label": "Shader tint", "default": "#F2D2BC" },
+    { "type": "range", "id": "speed", "label": "Speed", "min": 1, "max": 20, "step": 1, "default": 6 }
+  ],
+  "presets": [ { "name": "Quiz teaser (Iridescence)" } ]
+}
+{% endschema %}

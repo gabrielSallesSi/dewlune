@@ -1,0 +1,119 @@
+{
+  "sections": {
+    "main": {
+      "type": "ingredient-glossary",
+      "blocks": {
+        "i1": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "vitamin-c"
+          }
+        },
+        "i2": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "ferulic-acid"
+          }
+        },
+        "i3": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "hyaluronic-acid"
+          }
+        },
+        "i4": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "panthenol"
+          }
+        },
+        "i5": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "niacinamide"
+          }
+        },
+        "i6": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "ceramides"
+          }
+        },
+        "i7": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "squalane"
+          }
+        },
+        "i8": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "bakuchiol"
+          }
+        },
+        "i9": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "rosehip-oil"
+          }
+        },
+        "i10": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "zinc-oxide"
+          }
+        },
+        "i11": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "glycerin"
+          }
+        },
+        "i12": {
+          "type": "ingredient",
+          "settings": {
+            "handle": "allantoin"
+          }
+        }
+      },
+      "block_order": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6",
+        "i7",
+        "i8",
+        "i9",
+        "i10",
+        "i11",
+        "i12"
+      ],
+      "settings": {}
+    },
+    "marquee": {
+      "type": "scroll-marquee",
+      "blocks": {
+        "r1": {
+          "type": "row",
+          "settings": {
+            "items": "Disclosed,Concentrated,Fragrance free,Refillable",
+            "style": "italic"
+          }
+        }
+      },
+      "block_order": [
+        "r1"
+      ],
+      "settings": {
+        "velocity": 50,
+        "size": 64
+      }
+    }
+  },
+  "order": [
+    "main",
+    "marquee"
+  ]
+}

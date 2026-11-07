@@ -1,0 +1,136 @@
+{%- liquid
+  assign payment_list = section.settings.payment_fallback | split: ','
+  assign has_social = false
+  if settings.social_instagram != blank or settings.social_tiktok != blank or settings.social_pinterest != blank or settings.social_youtube != blank
+    assign has_social = true
+  endif
+-%}
+<footer class="footer">
+  <div class="container footer__top">
+    <div class="footer__news">
+      <p class="footer__eyebrow">{{ section.settings.news_eyebrow }}</p>
+      <h2 class="footer__title">{{ section.settings.news_heading }}</h2>
+      {%- form 'customer', id: 'FooterNewsletter', class: 'footer__form', data-news-form: '' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter,footer">
+        {%- if form.posted_successfully? -%}
+          <div class="news-success" role="status" tabindex="-1" data-news-success>
+            <svg class="news-success__check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" fill="none"/><path fill="none" d="M15 27l7 7 15-16"/></svg>
+            <span>{{ section.settings.news_success }}</span>
+          </div>
+        {%- else -%}
+          <div class="field-pill field-pill--dark">
+            <label class="visually-hidden" for="FooterEmail">{{ 'newsletter.email' | t }}</label>
+            <input id="FooterEmail" type="email" name="contact[email]" autocomplete="email" required placeholder="{{ 'newsletter.email' | t }}">
+            <button type="submit" class="shine-btn shine-btn--light">
+              {{ 'newsletter.subscribe' | t }}
+              {% render 'icon', icon: 'arrow-circle' %}
+              <span class="dots-loader" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            </button>
+          </div>
+          {%- if form.errors -%}<p class="form-error form-error--light">{{ form.errors | default_errors }}</p>{%- endif -%}
+          <p class="footer__fine">{{ section.settings.news_fine }}</p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    <div class="footer__cols">
+      {%- for block in section.blocks -%}
+        <div class="footer__col" {{ block.shopify_attributes }}>
+          <p class="footer__heading">{{ block.settings.heading }}</p>
+          <ul role="list">
+            {%- case block.type -%}
+              {%- when 'links' -%}
+                {%- for link in block.settings.menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {%- endfor -%}
+              {%- when 'custom_links' -%}
+                {%- assign lines = block.settings.links | newline_to_br | split: '<br />' -%}
+                {%- for line in lines -%}
+                  {%- assign parts = line | split: '|' -%}
+                  {%- assign t = parts[0] | strip -%}
+                  {%- assign u = parts[1] | strip -%}
+                  {%- if t != blank -%}<li><a href="{{ u | default: '#' }}">{{ t }}</a></li>{%- endif -%}
+                {%- endfor -%}
+            {%- endcase -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="container footer__mid">
+    <p class="footer__tagline">{{ section.settings.tagline }}</p>
+    {%- if has_social -%}
+      <ul class="footer__social" role="list">
+        {%- if settings.social_instagram != blank -%}<li><a href="{{ settings.social_instagram }}" class="social-btn" target="_blank" rel="noopener">{% render 'icon', icon: 'instagram' %}<span class="visually-hidden">Instagram</span></a></li>{%- endif -%}
+        {%- if settings.social_tiktok != blank -%}<li><a href="{{ settings.social_tiktok }}" class="social-btn" target="_blank" rel="noopener">{% render 'icon', icon: 'tiktok' %}<span class="visually-hidden">TikTok</span></a></li>{%- endif -%}
+        {%- if settings.social_pinterest != blank -%}<li><a href="{{ settings.social_pinterest }}" class="social-btn" target="_blank" rel="noopener">{% render 'icon', icon: 'pinterest' %}<span class="visually-hidden">Pinterest</span></a></li>{%- endif -%}
+        {%- if settings.social_youtube != blank -%}<li><a href="{{ settings.social_youtube }}" class="social-btn" target="_blank" rel="noopener">{% render 'icon', icon: 'youtube' %}<span class="visually-hidden">YouTube</span></a></li>{%- endif -%}
+      </ul>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Interactive wordmark: adapted from React Bits VariableProximity {%- endcomment -%}
+  <div class="footer__wordmark" data-proximity data-radius="{{ section.settings.wordmark_radius }}" aria-label="{{ shop.name | escape }}" role="img">
+    <span class="footer__wordmark-text" aria-hidden="true">{{ shop.name | downcase }}</span>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.notice }}</p>
+    <div class="footer__bottom-right">
+      {%- if section.settings.show_localization and localization.available_countries.size > 0 -%}
+        {% render 'localization', id: 'FooterLoc', up: true %}
+      {%- endif -%}
+      {%- if section.settings.show_payment -%}
+        <ul class="footer__payment" role="list">
+          {%- if shop.enabled_payment_types.size > 0 -%}
+            {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}
+          {%- else -%}
+            {%- for type in payment_list -%}{%- assign t = type | strip -%}<li>{{ t | payment_type_svg_tag }}</li>{%- endfor -%}
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "header", "content": "Newsletter" },
+    { "type": "text", "id": "news_eyebrow", "label": "Eyebrow", "default": "The Dewlune letter" },
+    { "type": "text", "id": "news_heading", "label": "Heading", "default": "Skin notes, twice a month" },
+    { "type": "text", "id": "news_fine", "label": "Fine print", "default": "No daily emails. Unsubscribe anytime." },
+    { "type": "text", "id": "news_success", "label": "Success message", "default": "You are on the list. Welcome." },
+    { "type": "header", "content": "Brand" },
+    { "type": "textarea", "id": "tagline", "label": "Tagline", "default": "Skincare, distilled. Six formulas with every active percentage on the label." },
+    { "type": "range", "id": "wordmark_radius", "label": "Wordmark reaction radius", "info": "Adapted from React Bits VariableProximity.", "min": 100, "max": 500, "step": 20, "unit": "px", "default": 260 },
+    { "type": "header", "content": "Bottom bar" },
+    { "type": "text", "id": "notice", "label": "Notice", "default": "A portfolio demo store. Dewlune is a fictional brand and no orders are fulfilled." },
+    { "type": "checkbox", "id": "show_localization", "label": "Show country and currency selector", "default": true },
+    { "type": "checkbox", "id": "show_payment", "label": "Show payment icons", "default": true },
+    { "type": "text", "id": "payment_fallback", "label": "Icons when no payment method is active", "info": "Payment type handles, separated by commas.", "default": "visa,master,american_express,paypal,apple_pay,google_pay,shopify_pay" }
+  ],
+  "blocks": [
+    {
+      "type": "custom_links",
+      "name": "Link list",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" },
+        { "type": "textarea", "id": "links", "label": "Links", "info": "One per line: Label | /url", "default": "All formulas | /collections/all\nBuild your ritual | /pages/build-your-ritual\nThe Daily Ritual Set | /products/the-daily-ritual-set" }
+      ]
+    },
+    {
+      "type": "links",
+      "name": "Shopify menu",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Explore" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    }
+  ]
+}
+{% endschema %}

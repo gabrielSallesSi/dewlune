@@ -1,0 +1,70 @@
+<section class="section concern-gallery">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="h2"><span class="blur-text" data-blur-text data-on-view>{{ section.settings.heading }}</span></h2>
+      </div>
+      {%- if section.settings.text != blank -%}<p class="section-head__text">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+
+    <div class="accordion-gallery" data-accordion-gallery data-default="{{ section.settings.default_index | minus: 1 }}" style="--ag-height: {{ section.settings.height }}px;" role="list">
+      {%- for block in section.blocks -%}
+        <a class="ag-panel" href="{{ block.settings.link | default: '#' }}" role="listitem" aria-label="{{ block.settings.label | escape }}" {{ block.shopify_attributes }}>
+          <span class="ag-panel__frame">
+            <span class="ag-panel__media">
+              {% render 'media', image: block.settings.image, url: block.settings.image_url, alt: block.settings.label, sizes: '(min-width: 990px) 60vw, 100vw', max: 2560 %}
+            </span>
+            <span class="ag-panel__overlay" aria-hidden="true"></span>
+          </span>
+          <span class="ag-panel__label">
+            <span class="ag-panel__bar" aria-hidden="true"></span>
+            <span class="ag-panel__text">
+              <strong>{{ block.settings.label }}</strong>
+              {%- if block.settings.description != blank -%}<small>{{ block.settings.description }}</small>{%- endif -%}
+            </span>
+          </span>
+          <span class="ag-panel__vertical" aria-hidden="true">{{ block.settings.label }}</span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by concern",
+  "class": "section-concern",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop by concern" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Start with how your skin feels" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Hover or tap a panel to see the formulas built for it." },
+    { "type": "range", "id": "height", "label": "Height", "min": 360, "max": 680, "step": 20, "unit": "px", "default": 540 },
+    { "type": "range", "id": "default_index", "label": "Open panel", "min": 1, "max": 6, "step": 1, "default": 2 }
+  ],
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "Panel",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_url", "label": "Or Unsplash image link", "default": "https://images.unsplash.com/photo-1748543668687-624e058c367c" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Dullness" },
+        { "type": "text", "id": "description", "label": "Description", "default": "Vitamin C and ferulic acid" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by concern",
+      "blocks": [
+        { "type": "panel" },
+        { "type": "panel", "settings": { "label": "Dryness", "image_url": "https://images.unsplash.com/photo-1748543668646-e81cda0890f3", "description": "Hyaluronic acid and ceramides" } },
+        { "type": "panel", "settings": { "label": "Redness", "image_url": "https://images.unsplash.com/photo-1558470570-c9a5a5ade867", "description": "Panthenol and allantoin" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

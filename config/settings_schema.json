@@ -1,0 +1,152 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Dewlune",
+    "theme_version": "1.0.0",
+    "theme_author": "Toba Azul",
+    "theme_documentation_url": "https://github.com/gabrielSallesSi",
+    "theme_support_url": "https://github.com/gabrielSallesSi"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#F4EEE7"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Surface",
+        "default": "#FBF8F4"
+      },
+      {
+        "type": "color",
+        "id": "color_ink",
+        "label": "Text",
+        "default": "#2B211C"
+      },
+      {
+        "type": "color",
+        "id": "color_muted",
+        "label": "Muted text",
+        "default": "#7A6C62"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent (amber)",
+        "default": "#A0552A"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_soft",
+        "label": "Accent soft (peach)",
+        "default": "#F1D9C6"
+      },
+      {
+        "type": "color",
+        "id": "color_sage",
+        "label": "Sage",
+        "default": "#8C9A83"
+      },
+      {
+        "type": "color",
+        "id": "color_line",
+        "label": "Lines",
+        "default": "#E2D6CA"
+      }
+    ]
+  },
+  {
+    "name": "Motion",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_motion",
+        "label": "Enable animated effects",
+        "info": "Visitors who prefer reduced motion always get the static version.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_webgl",
+        "label": "Enable WebGL backgrounds",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          },
+          {
+            "value": "page",
+            "label": "Page"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "info": "In the store currency. Use 0 to hide the progress bar.",
+        "default": 75
+      },
+      {
+        "type": "text",
+        "id": "ritual_discount_note",
+        "label": "Ritual bundle note",
+        "info": "Shown in the cart when 3 or more products are in it. Create a matching automatic discount in Discounts.",
+        "default": "Ritual savings of 15% applied at 3+ products"
+      }
+    ]
+  },
+  {
+    "name": "Social",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok",
+        "label": "TikTok URL"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest",
+        "label": "Pinterest URL"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube",
+        "label": "YouTube URL"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "32 x 32 px .png"
+      }
+    ]
+  }
+]

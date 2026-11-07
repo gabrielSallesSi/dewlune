@@ -1,0 +1,104 @@
+{%- comment -%}
+  Ingredient glossary entry, looked up by handle (the part after "ing:" in a product tag).
+  - handle: ingredient handle, e.g. "vitamin-c"
+  - style: "chip" | "row" | "card" (default card)
+  - products: optional comma separated product titles that use it
+{%- endcomment -%}
+{%- liquid
+  assign name = ''
+  assign role = ''
+  assign about = ''
+  assign source = ''
+  case handle
+    when 'vitamin-c'
+      assign name = 'Vitamin C'
+      assign role = 'Brightening antioxidant'
+      assign about = 'Used here as ethyl ascorbic acid, a stable form of vitamin C. It helps even out the look of tone and supports skin against daily environmental stress.'
+      assign source = 'Lab made'
+    when 'ferulic-acid'
+      assign name = 'Ferulic acid'
+      assign role = 'Antioxidant partner'
+      assign about = 'A plant derived antioxidant commonly paired with vitamin C to help keep the formula stable.'
+      assign source = 'Rice bran'
+    when 'hyaluronic-acid'
+      assign name = 'Hyaluronic acid'
+      assign role = 'Humectant'
+      assign about = 'Draws water into the surface layers of the skin, so it looks and feels plumper and more supple.'
+      assign source = 'Fermentation'
+    when 'panthenol'
+      assign name = 'Panthenol'
+      assign role = 'Soothing humectant'
+      assign about = 'Pro-vitamin B5. Helps the skin hold moisture and feel calmer after cleansing.'
+      assign source = 'Lab made'
+    when 'niacinamide'
+      assign name = 'Niacinamide'
+      assign role = 'Barrier support'
+      assign about = 'Vitamin B3. Supports the skin barrier and helps refine the look of pores and uneven tone.'
+      assign source = 'Lab made'
+    when 'ceramides'
+      assign name = 'Ceramides'
+      assign role = 'Barrier lipids'
+      assign about = 'Lipids that occur naturally in the skin barrier. Topical ceramides help reduce moisture loss.'
+      assign source = 'Lab made, skin identical'
+    when 'squalane'
+      assign name = 'Squalane'
+      assign role = 'Weightless emollient'
+      assign about = "A stable oil that mirrors part of the skin's own sebum. Softens without a heavy feel."
+      assign source = 'Olive'
+    when 'bakuchiol'
+      assign name = 'Bakuchiol'
+      assign role = 'Night renewal'
+      assign about = 'A plant extract often chosen as a gentler alternative to retinol for smoother looking skin.'
+      assign source = 'Babchi seed'
+    when 'rosehip-oil'
+      assign name = 'Rosehip oil'
+      assign role = 'Nourishing oil'
+      assign about = 'A cold pressed seed oil rich in fatty acids that leaves skin soft and comfortable.'
+      assign source = 'Rosa canina seed'
+    when 'zinc-oxide'
+      assign name = 'Zinc oxide'
+      assign role = 'Mineral UV filter'
+      assign about = 'A mineral filter that sits on the skin and helps protect against UVA and UVB light.'
+      assign source = 'Mineral'
+    when 'glycerin'
+      assign name = 'Glycerin'
+      assign role = 'Humectant'
+      assign about = 'One of the most widely used humectants in skincare. Keeps cleansing from feeling stripping.'
+      assign source = 'Plant'
+    when 'allantoin'
+      assign name = 'Allantoin'
+      assign role = 'Comfort agent'
+      assign about = 'Helps soften skin and keep it comfortable, which makes it a good fit for sensitive routines.'
+      assign source = 'Lab made'
+  endcase
+-%}
+{%- if name != blank -%}
+  {%- case style -%}
+    {%- when 'chip' -%}
+      <span class="ing-chip" data-ingredient="{{ handle }}">{{ name }}</span>
+    {%- when 'row' -%}
+      <li class="ing-row">
+        <span class="ing-row__icon">{% render 'icon', icon: 'drop' %}</span>
+        <span class="ing-row__text">
+          <strong>{{ name }}</strong>
+          <span>{{ role }}</span>
+        </span>
+        <a class="ing-row__link" href="{{ routes.root_url }}pages/ingredients#{{ handle }}">{% render 'icon', icon: 'arrow' %}<span class="visually-hidden">{{ name }}</span></a>
+      </li>
+    {%- else -%}
+      <article class="ing-card spotlight" id="{{ handle }}" data-spotlight data-ingredient-card data-name="{{ name | downcase }} {{ role | downcase }}" data-letter="{{ name | slice: 0 | upcase }}">
+        <header>
+          <span class="ing-card__letter" aria-hidden="true">{{ name | slice: 0, 2 }}</span>
+          <p class="ing-card__role">{{ role }}</p>
+        </header>
+        <h3 class="ing-card__name">{{ name }}</h3>
+        <p class="ing-card__about">{{ about }}</p>
+        <dl class="ing-card__meta">
+          <div><dt>Origin</dt><dd>{{ source }}</dd></div>
+          {%- if products != blank -%}
+            <div><dt>Found in</dt><dd>{{ products }}</dd></div>
+          {%- endif -%}
+        </dl>
+      </article>
+  {%- endcase -%}
+{%- endif -%}

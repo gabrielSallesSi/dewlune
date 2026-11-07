@@ -1,0 +1,17 @@
+<article class="section article">
+  <div class="container container--narrow">
+    <a href="{{ blog.url }}" class="crumbs">{{ 'blogs.back' | t }}</a>
+    <p class="eyebrow">{{ article.published_at | time_tag: format: 'date' }}</p>
+    <h1 class="h1"><span class="blur-text" data-blur-text>{{ article.title }}</span></h1>
+  </div>
+  {%- if article.image -%}
+    <div class="article__media container">
+      {{ article.image | image_url: width: 3840 | image_tag: widths: '768, 1440, 1920, 2560, 3840', sizes: '100vw', loading: 'eager' }}
+    </div>
+  {%- endif -%}
+  <div class="container container--narrow rte article__body">{{ article.content }}</div>
+</article>
+
+{% schema %}
+{ "name": "Article", "class": "section-main-article", "settings": [] }
+{% endschema %}

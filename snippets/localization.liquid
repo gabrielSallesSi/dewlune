@@ -1,0 +1,49 @@
+{%- comment -%}
+  Country / currency and language selector built on the Shopify localization form.
+  - id: unique id
+  - up: open the panel upwards
+{%- endcomment -%}
+{%- form 'localization', id: id, class: 'loc', data-loc: '' -%}
+  <details class="loc__pop{% if up %} loc__pop--up{% endif %}">
+    <summary class="loc__btn" aria-label="{{ 'localization.label' | t }}">
+      <span class="loc__flag" aria-hidden="true">{{ localization.country.iso_code }}</span>
+      <span>{{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }}</span>
+      {%- if localization.available_languages.size > 1 -%}<span class="loc__sep" aria-hidden="true">/</span><span>{{ localization.language.iso_code | upcase }}</span>{%- endif -%}
+      {% render 'icon', icon: 'chevron' %}
+    </summary>
+    <div class="loc__panel">
+      {%- if localization.available_countries.size > 6 -%}
+        <label class="loc__filter">
+          <span class="visually-hidden">{{ 'localization.search' | t }}</span>
+          {% render 'icon', icon: 'search' %}
+          <input type="search" placeholder="{{ 'localization.search' | t }}" data-loc-filter autocomplete="off">
+        </label>
+      {%- endif -%}
+      <p class="loc__heading">{{ 'localization.country' | t }}</p>
+      <ul class="loc__list" role="list">
+        {%- for country in localization.available_countries -%}
+          <li data-loc-item="{{ country.name | downcase | escape }} {{ country.iso_code | downcase }}">
+            <button type="submit" name="country_code" value="{{ country.iso_code }}"{% if country.iso_code == localization.country.iso_code %} aria-current="true"{% endif %}>
+              <span class="loc__code">{{ country.iso_code }}</span>
+              <span class="loc__name">{{ country.name }}</span>
+              <span class="loc__cur">{{ country.currency.iso_code }} {{ country.currency.symbol }}</span>
+            </button>
+          </li>
+        {%- endfor -%}
+      </ul>
+      {%- if localization.available_languages.size > 1 -%}
+        <p class="loc__heading">{{ 'localization.language' | t }}</p>
+        <ul class="loc__list" role="list">
+          {%- for language in localization.available_languages -%}
+            <li>
+              <button type="submit" name="language_code" value="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %}>
+                <span class="loc__code">{{ language.iso_code | upcase }}</span>
+                <span class="loc__name">{{ language.endonym_name | capitalize }}</span>
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </details>
+{%- endform -%}

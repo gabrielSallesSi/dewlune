@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "main": { "type": "main-product", "settings": {} },
+    "recs": { "type": "product-recommendations", "settings": { "heading": "Pairs well with", "limit": 4 } },
+    "builder": { "type": "ritual-builder", "settings": { "count": 3, "discount": 15 } }
+  },
+  "order": ["main", "recs", "builder"]
+}

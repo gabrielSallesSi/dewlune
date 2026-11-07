@@ -1,0 +1,47 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "shop": {
+          "type": "custom_links",
+          "settings": {
+            "heading": "Shop",
+            "links": "All formulas | /collections/all\nSerums | /collections/all?concern=dullness\nBuild your ritual | /pages/build-your-ritual\nThe Daily Ritual Set | /products/the-daily-ritual-set"
+          }
+        },
+        "help": {
+          "type": "custom_links",
+          "settings": {
+            "heading": "Help",
+            "links": "Skin quiz | /pages/skin-quiz\nFAQ | /pages/faq\nContact | /pages/contact\nSearch | /search"
+          }
+        },
+        "company": {
+          "type": "custom_links",
+          "settings": {
+            "heading": "Company",
+            "links": "About | /pages/about\nIngredient glossary | /pages/ingredients\nJournal | /blogs/news"
+          }
+        }
+      },
+      "block_order": [
+        "shop",
+        "help",
+        "company"
+      ],
+      "settings": {
+        "tagline": "Skincare, distilled. Six formulas with every active percentage on the label.",
+        "notice": "A portfolio demo store. Dewlune is a fictional brand and no orders are fulfilled.",
+        "show_payment": true,
+        "show_localization": true,
+        "wordmark_radius": 260
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

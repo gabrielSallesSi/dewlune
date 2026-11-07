@@ -1,0 +1,121 @@
+{%- liquid
+  assign concerns = ''
+  for product in collection.all_products limit: 50
+    for tag in product.tags
+      if tag contains 'concern:'
+        assign c = tag | remove_first: 'concern:'
+        assign concerns = concerns | append: c | append: ','
+      endif
+    endfor
+  endfor
+  assign concern_list = concerns | split: ',' | uniq | sort
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+-%}
+<section class="collection" data-filter-scope data-collection data-section-id="{{ section.id }}">
+  <header class="collection__hero">
+    <div class="collection__hero-media" aria-hidden="true">
+      {%- if collection.image -%}
+        {% render 'media', image: collection.image, alt: '', priority: true %}
+      {%- else -%}
+        {% render 'media', url: section.settings.image_url, alt: '', priority: true %}
+      {%- endif -%}
+    </div>
+    <div class="container collection__hero-inner">
+      <p class="eyebrow">{{ 'collections.count' | t: count: collection.products_count }}</p>
+      <h1 class="h1"><span class="blur-text" data-blur-text>{{ collection.title }}</span></h1>
+      {%- if collection.description != blank -%}<div class="collection__desc rte">{{ collection.description }}</div>{%- endif -%}
+    </div>
+  </header>
+
+  <div class="container">
+    {%- paginate collection.products by section.settings.per_page -%}
+      <form class="toolbar" data-filter-form action="{{ collection.url }}" method="get">
+        {%- if concern_list.size > 1 -%}
+          <div class="chips" role="group" aria-label="{{ 'collections.filter' | t }}">
+            <button type="button" class="chip is-active" data-concern-filter="all" aria-pressed="true">{{ 'collections.all_concerns' | t }}</button>
+            {%- for c in concern_list -%}
+              <button type="button" class="chip" data-concern-filter="{{ c }}" aria-pressed="false">{{ c | replace: '-', ' ' }}</button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <div class="toolbar__right">
+          {%- for filter in collection.filters -%}
+            {%- if filter.type == 'list' -%}
+              <details class="filter-pop">
+                <summary>{{ filter.label }}{% if filter.active_values.size > 0 %} <span class="filter-pop__count">{{ filter.active_values.size }}</span>{% endif %} {% render 'icon', icon: 'chevron' %}</summary>
+                <div class="filter-pop__panel">
+                  {%- for value in filter.values -%}
+                    <label class="filter-check{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %} data-filter-input>
+                      <span>{{ value.label }} <small>({{ value.count }})</small></span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </details>
+            {%- elsif filter.type == 'price_range' -%}
+              <details class="filter-pop">
+                <summary>{{ filter.label }} {% render 'icon', icon: 'chevron' %}</summary>
+                <div class="filter-pop__panel filter-pop__panel--price">
+                  <label><span>Min</span><input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" placeholder="0" min="0" data-filter-input></label>
+                  <label><span>Max</span><input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" min="0" data-filter-input></label>
+                </div>
+              </details>
+            {%- endif -%}
+          {%- endfor -%}
+          <label class="sort">
+            <span class="visually-hidden">{{ 'collections.sort' | t }}</span>
+            <select name="sort_by" data-filter-input>
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name }}</option>
+              {%- endfor -%}
+            </select>
+            {% render 'icon', icon: 'chevron' %}
+          </label>
+          <noscript><button type="submit" class="chip">{{ 'collections.apply' | t }}</button></noscript>
+        </div>
+      </form>
+
+      {%- assign active_count = 0 -%}
+      {%- for filter in collection.filters -%}{%- assign active_count = active_count | plus: filter.active_values.size -%}{%- endfor -%}
+      {%- if active_count > 0 -%}
+        <p class="active-filters"><a href="{{ collection.url }}?sort_by={{ sort_by }}" data-filter-clear>{{ 'collections.clear' | t }} {% render 'icon', icon: 'close' %}</a></p>
+      {%- endif -%}
+
+      <div data-collection-results>
+        {%- if collection.products.size > 0 -%}
+          <ul class="product-grid" role="list">
+            {%- for product in collection.products -%}
+              <li class="product-grid__item" style="--i: {{ forloop.index0 | modulo: 8 }}" data-reveal>
+                {% render 'product-card', product: product %}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          <p class="empty-state">{{ 'collections.empty' | t }}</p>
+        {%- endif -%}
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="Pagination">
+            {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="chip">{{ 'general.previous' | t }}</a>{%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}<a class="chip" href="{{ part.url }}">{{ part.title }}</a>{%- else -%}<span class="chip is-active">{{ part.title }}</span>{%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="chip">{{ 'general.next' | t }}</a>{%- endif -%}
+          </nav>
+        {%- endif -%}
+      </div>
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection",
+  "class": "section-main-collection",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "text", "id": "image_url", "label": "Banner Unsplash link", "info": "Used when the collection has no image.", "default": "https://images.unsplash.com/photo-1748543668699-a8a9398e9161" }
+  ]
+}
+{% endschema %}

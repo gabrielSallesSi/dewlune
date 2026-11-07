@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "faq": { "type": "faq",
+      "blocks": {
+        "f1": { "type": "item", "settings": { "question": "Is Dewlune a real brand?", "answer": "<p>No. Dewlune is a fictional brand created for a Shopify theme portfolio. Orders placed here are not fulfilled.</p>" } },
+        "f2": { "type": "item", "settings": { "question": "Can I use vitamin C and niacinamide together?", "answer": "<p>Yes. Apply Amber Glow Serum first, let it settle for a minute, then follow with Cloud Cream.</p>" } },
+        "f3": { "type": "item", "settings": { "question": "Which products should I use in the morning?", "answer": "<p>Soft Gel Cleanser, Amber Glow Serum, Cloud Cream and Daily Veil SPF 30, in that order.</p>" } },
+        "f4": { "type": "item", "settings": { "question": "How do refills work?", "answer": "<p>Refill pods click into the original jar or bottle. Choose the Refill size on the product page.</p>" } },
+        "f5": { "type": "item", "settings": { "question": "How does the ritual saving work?", "answer": "<p>Add any three products from the Build your ritual section and the saving applies at checkout.</p>" } },
+        "f6": { "type": "item", "settings": { "question": "When do I get free shipping?", "answer": "<p>The bar in your bag shows how far you are from the free shipping threshold.</p>" } },
+        "f7": { "type": "item", "settings": { "question": "Are the formulas fragrance free?", "answer": "<p>Yes. No fragrance or essential oils are added to any formula.</p>" } },
+        "f8": { "type": "item", "settings": { "question": "Can I return an opened product?", "answer": "<p>In this demo store returns are not processed. A real store would describe its policy here.</p>" } }
+      },
+      "block_order": ["f1","f2","f3","f4","f5","f6","f7","f8"],
+      "settings": {}
+    },
+    "quiz": { "type": "quiz-teaser", "settings": {} }
+  },
+  "order": ["faq", "quiz"]
+}

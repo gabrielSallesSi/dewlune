@@ -1,0 +1,110 @@
+{%- liquid
+  assign words = section.settings.rotating_words | split: ','
+-%}
+<section class="hero" data-hero style="--hero-shade: {{ section.settings.shade | divided_by: 100.0 }}; --hero-min: {{ section.settings.height }}svh;">
+  <div class="hero__media">
+    {% render 'media',
+      image: section.settings.image,
+      url: section.settings.image_url,
+      alt: section.settings.image_alt,
+      priority: true,
+      position: section.settings.position,
+      class: 'hero__img hero__img--desktop'
+    %}
+    {%- if section.settings.mobile_image != blank or section.settings.mobile_image_url != blank -%}
+      {% render 'media',
+        image: section.settings.mobile_image,
+        url: section.settings.mobile_image_url,
+        alt: section.settings.image_alt,
+        priority: true,
+        max: 1440,
+        class: 'hero__img hero__img--mobile'
+      %}
+    {%- endif -%}
+    <div class="hero__grade" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__content container">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow hero__eyebrow" data-fade>{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <h1 class="hero__title">
+      <span class="blur-text" data-blur-text data-delay="90">{{ section.settings.heading }}</span>
+      {%- if words.size > 0 -%}
+        <span class="text-rotate" data-text-rotate data-interval="{{ section.settings.rotate_interval | times: 1000 }}" aria-live="off">
+          {%- for w in words -%}
+            <span class="text-rotate__word{% if forloop.first %} is-active{% endif %}">{{ w | strip }}</span>
+          {%- endfor -%}
+        </span>
+        <span class="visually-hidden">{{ words | join: ', ' }}</span>
+      {%- endif -%}
+    </h1>
+    {%- if section.settings.text != blank -%}
+      <p class="hero__text" data-fade style="--d: .5s">{{ section.settings.text }}</p>
+    {%- endif -%}
+    <div class="hero__actions" data-fade style="--d: .7s">
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="shine-btn">
+          {{ section.settings.button_label }}
+          {% render 'icon', icon: 'arrow-circle' %}
+        </a>
+      {%- endif -%}
+      {%- if section.settings.button2_label != blank -%}
+        <a href="{{ section.settings.button2_link | default: '/pages/skin-quiz' }}" class="hover-btn hover-btn--glass">
+          <span class="hover-btn__dot" aria-hidden="true"></span>
+          <span class="hover-btn__label">{{ section.settings.button2_label }}</span>
+          <span class="hover-btn__reveal" aria-hidden="true">{{ section.settings.button2_label }}{% render 'icon', icon: 'arrow' %}</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.settings.badge_text != blank -%}
+    <div class="circular-text hero__badge" data-circular-text data-speed="{{ section.settings.badge_speed }}" aria-hidden="true">
+      <span class="circular-text__ring">{{ section.settings.badge_text }}</span>
+      <span class="circular-text__core">{% render 'icon', icon: 'drop' %}</span>
+    </div>
+  {%- endif -%}
+
+  <div class="gradual-blur gradual-blur--bottom" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "class": "section-hero",
+  "settings": [
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_url", "label": "Or Unsplash image link", "info": "Used when no image is uploaded. Served up to 3840 px wide.", "default": "https://images.unsplash.com/photo-1748543668643-1ada33167539" },
+    { "type": "image_picker", "id": "mobile_image", "label": "Mobile image" },
+    { "type": "text", "id": "mobile_image_url", "label": "Or mobile Unsplash link", "default": "https://images.unsplash.com/photo-1608571424237-381e6b43a2a7" },
+    { "type": "text", "id": "image_alt", "label": "Image description", "default": "Golden serum, cream and green gel swatches on a warm peach surface" },
+    { "type": "select", "id": "position", "label": "Focal point", "options": [
+      { "value": "left center", "label": "Left" },
+      { "value": "center center", "label": "Center" },
+      { "value": "70% center", "label": "Right of center" },
+      { "value": "right center", "label": "Right" }
+    ], "default": "right center" },
+    { "type": "range", "id": "shade", "label": "Text side shade", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 35 },
+    { "type": "range", "id": "height", "label": "Height", "min": 60, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Six formulas. Every percentage on the label." },
+    { "type": "text", "id": "heading", "label": "Heading (BlurText)", "default": "Skincare for skin that feels" },
+    { "type": "text", "id": "rotating_words", "label": "Rotating words (Text Rotate)", "info": "Separate with commas.", "default": "calm.,dewy.,even.,rested." },
+    { "type": "range", "id": "rotate_interval", "label": "Seconds per word", "min": 2, "max": 6, "step": 1, "default": 3 },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Clean, concentrated formulas built around one idea: you should know exactly what you put on your skin." },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label", "label": "Primary label", "default": "Shop the edit" },
+    { "type": "url", "id": "button_link", "label": "Primary link" },
+    { "type": "text", "id": "button2_label", "label": "Secondary label", "default": "Take the skin quiz" },
+    { "type": "url", "id": "button2_link", "label": "Secondary link" },
+    { "type": "header", "content": "Badge (CircularText)" },
+    { "type": "text", "id": "badge_text", "label": "Badge text", "default": "fragrance free * vegan * refillable * " },
+    { "type": "range", "id": "badge_speed", "label": "Seconds per turn", "min": 8, "max": 40, "step": 2, "default": 20 }
+  ],
+  "presets": [ { "name": "Hero" } ]
+}
+{% endschema %}

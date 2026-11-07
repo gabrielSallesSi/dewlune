@@ -1,0 +1,43 @@
+<section class="marquee-section" style="--mq-size: {{ section.settings.size }}px;" aria-label="{{ section.settings.label | escape }}">
+  {%- for block in section.blocks -%}
+    {%- assign items = block.settings.items | split: ',' -%}
+    <div class="velocity" data-scroll-velocity data-velocity="{% if forloop.index0 == 1 or forloop.index0 == 3 %}-{% endif %}{{ section.settings.velocity }}" {{ block.shopify_attributes }}>
+      <div class="velocity__track">
+        {%- for i in (1..4) -%}
+          <span class="velocity__copy"{% if i > 1 %} aria-hidden="true"{% endif %}>
+            {%- for item in items -%}
+              <span class="velocity__item{% if block.settings.style == 'italic' %} velocity__item--italic{% endif %}">{{ item | strip }}</span>
+              <span class="velocity__sep" aria-hidden="true">{% render 'icon', icon: 'drop' %}</span>
+            {%- endfor -%}
+          </span>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endfor -%}
+</section>
+
+{% schema %}
+{
+  "name": "Scroll velocity marquee",
+  "class": "section-marquee",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "label", "label": "Accessible label", "default": "Ingredients we use" },
+    { "type": "range", "id": "velocity", "label": "Base speed", "min": 20, "max": 200, "step": 10, "unit": "px", "default": 60 },
+    { "type": "range", "id": "size", "label": "Text size", "min": 32, "max": 128, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        { "type": "text", "id": "items", "label": "Items", "info": "Separate with commas.", "default": "Vitamin C,Squalane,Ceramides,Hyaluronic acid,Bakuchiol" },
+        { "type": "select", "id": "style", "label": "Style", "options": [ { "value": "regular", "label": "Regular" }, { "value": "italic", "label": "Italic outline" } ], "default": "regular" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Scroll velocity marquee", "blocks": [ { "type": "row" }, { "type": "row", "settings": { "style": "italic", "items": "Niacinamide,Rosehip oil,Zinc oxide,Panthenol,Ferulic acid" } } ] }
+  ]
+}
+{% endschema %}

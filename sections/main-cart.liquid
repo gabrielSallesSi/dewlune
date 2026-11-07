@@ -1,0 +1,53 @@
+<section class="section cart-page container container--mid">
+  <h1 class="h1"><span class="blur-text" data-blur-text>{{ 'cart.title' | t }}</span></h1>
+  {%- if cart.item_count > 0 -%}
+    <form action="{{ routes.cart_url }}" method="post" class="cart-page__grid" data-cart-page>
+      <ul class="cart-items cart-items--page" role="list">
+        {%- for item in cart.items -%}
+          <li class="cart-item">
+            <a href="{{ item.url }}" class="cart-item__media">
+              {%- if item.image -%}{{ item.image | image_url: width: 400 | image_tag: loading: 'lazy', alt: item.product.title }}{%- endif -%}
+            </a>
+            <div class="cart-item__info">
+              <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+              {%- unless item.product.has_only_default_variant -%}<p class="cart-item__variant">{{ item.variant.title }}</p>{%- endunless -%}
+              <div class="cart-item__row">
+                <label class="qty-field">
+                  <span class="visually-hidden">{{ 'products.quantity' | t }}</span>
+                  <input type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+                </label>
+                <div class="cart-item__price">
+                  {%- if item.original_line_price > item.final_line_price -%}<s>{{ item.original_line_price | money }}</s>{%- endif -%}
+                  <span>{{ item.final_line_price | money }}</span>
+                </div>
+              </div>
+              <a class="cart-item__remove" href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }}</a>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <aside class="cart-page__summary">
+        {%- for discount in cart.cart_level_discount_applications -%}
+          <p class="cart-drawer__line"><span>{{ discount.title }}</span><span>-{{ discount.total_allocated_amount | money }}</span></p>
+        {%- endfor -%}
+        <p class="cart-drawer__line cart-drawer__total"><span>{{ 'cart.subtotal' | t }}</span><span>{{ cart.total_price | money_with_currency }}</span></p>
+        <label class="cart-note">
+          <span>{{ 'cart.note' | t }}</span>
+          <textarea name="note" rows="3">{{ cart.note }}</textarea>
+        </label>
+        <p class="cart-drawer__fine">{{ 'cart.taxes' | t }}</p>
+        <button type="submit" name="update" class="chip">Update</button>
+        <button type="submit" name="checkout" class="shine-btn shine-btn--block">{{ 'cart.checkout' | t }}{% render 'icon', icon: 'arrow-circle' %}</button>
+      </aside>
+    </form>
+  {%- else -%}
+    <div class="cart-empty">
+      <p>{{ 'cart.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="shine-btn">{{ 'cart.continue' | t }}{% render 'icon', icon: 'arrow-circle' %}</a>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{ "name": "Cart", "class": "section-main-cart", "settings": [] }
+{% endschema %}

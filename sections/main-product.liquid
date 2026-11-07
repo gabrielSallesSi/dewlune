@@ -1,0 +1,230 @@
+{%- liquid
+  assign current = product.selected_or_first_available_variant
+  assign desc_parts = product.description | split: '<h4>'
+  assign lede = desc_parts | first
+  assign ingredients = ''
+  assign concerns = ''
+  for tag in product.tags
+    if tag contains 'ing:'
+      assign ing = tag | remove_first: 'ing:'
+      assign ingredients = ingredients | append: ing | append: ','
+    elsif tag contains 'concern:'
+      assign c = tag | remove_first: 'concern:'
+      assign concerns = concerns | append: c | append: ','
+    endif
+  endfor
+  assign ingredient_list = ingredients | split: ','
+  assign concern_list = concerns | split: ','
+  assign threshold = settings.free_shipping_threshold | times: 100
+-%}
+<section class="product container" data-product-section data-section-id="{{ section.id }}">
+  <div class="product__gallery" data-gallery>
+    <div class="product__track" data-gallery-track>
+      <figure class="product__media product__media--lead glare" data-glare{% if product.featured_media %} data-media-id="{{ product.featured_media.id }}"{% endif %}>
+        {% render 'branded-product-image', product: product, class: 'product__img', loading: 'eager', sizes: '(min-width: 990px) 55vw, 100vw', priority: true %}
+        <span class="glare__band" aria-hidden="true"></span>
+      </figure>
+    </div>
+  </div>
+
+  <div class="product__info">
+    <div class="product__sticky">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
+        <span aria-hidden="true">/</span>
+        <a href="{{ routes.all_products_collection_url }}">{{ product.type | default: 'Shop' }}</a>
+      </nav>
+
+      <p class="product__vendor">{{ product.vendor | escape }}</p>
+      <h1 class="product__title"><span class="blur-text" data-blur-text>{{ product.title | escape }}</span></h1>
+
+      {%- if concern_list.size > 0 -%}
+        <ul class="card__chips product__chips" role="list">
+          {%- for c in concern_list -%}<li>{{ c | replace: '-', ' ' }}</li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <div class="product__price" data-product-price>
+        {% render 'price', product: product, variant: current %}
+      </div>
+
+      {%- if lede != blank -%}
+        <div class="product__lede rte">{{ lede }}</div>
+      {%- endif -%}
+
+      {%- form 'product', product, id: 'ProductForm', class: 'product__form', data-product-form: '', novalidate: 'novalidate' -%}
+        <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
+
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            {%- assign option_index = forloop.index0 -%}
+            <fieldset class="seg" data-option-index="{{ option_index }}">
+              <legend class="seg__legend">{{ option.name }} <span data-option-value>{{ option.selected_value }}</span></legend>
+              <div class="seg__track">
+                {%- for value in option.values -%}
+                  <input type="radio" id="Opt-{{ section.id }}-{{ option_index }}-{{ forloop.index }}" name="{{ option.name | escape }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-input>
+                  <label for="Opt-{{ section.id }}-{{ option_index }}-{{ forloop.index }}">{{ value }}</label>
+                {%- endfor -%}
+              </div>
+            </fieldset>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        {%- if product.selling_plan_groups.size > 0 -%}
+          <fieldset class="purchase" data-purchase>
+            <legend class="seg__legend">{{ 'products.subscribe' | t }}</legend>
+            {%- unless product.requires_selling_plan -%}
+              <label class="purchase__opt">
+                <input type="radio" name="selling_plan" value="" checked>
+                <span><strong>{{ 'products.one_time' | t }}</strong></span>
+              </label>
+            {%- endunless -%}
+            {%- for group in product.selling_plan_groups -%}
+              {%- for plan in group.selling_plans -%}
+                <label class="purchase__opt">
+                  <input type="radio" name="selling_plan" value="{{ plan.id }}" {% if product.requires_selling_plan and forloop.first %}checked{% endif %}>
+                  <span><strong>{{ plan.name }}</strong>{% if plan.description != blank %}<small>{{ plan.description }}</small>{% endif %}</span>
+                </label>
+              {%- endfor -%}
+            {%- endfor -%}
+          </fieldset>
+        {%- endif -%}
+
+        <div class="product__buy">
+          <div class="qty qty--lg" data-qty-input>
+            <button type="button" data-step="-1" aria-label="{{ 'products.quantity' | t }} -1">{% render 'icon', icon: 'minus' %}</button>
+            <label class="visually-hidden" for="Qty-{{ section.id }}">{{ 'products.quantity' | t }}</label>
+            <input id="Qty-{{ section.id }}" type="number" name="quantity" value="1" min="1" inputmode="numeric">
+            <button type="button" data-step="1" aria-label="{{ 'products.quantity' | t }} +1">{% render 'icon', icon: 'plus' %}</button>
+          </div>
+          <button type="submit" name="add" class="shine-btn shine-btn--block" data-add-button {% unless current.available %}disabled{% endunless %}>
+            <span data-add-label>{% if current.available %}{{ 'products.add_to_cart' | t }}{% else %}{{ 'products.sold_out' | t }}{% endif %}</span>
+            {% render 'icon', icon: 'arrow-circle' %}
+            <span class="dots-loader" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          </button>
+        </div>
+      {%- endform -%}
+
+      <ul class="product__perks" role="list">
+        {%- if threshold > 0 -%}
+          {%- assign threshold_money = threshold | money_without_trailing_zeros -%}
+          <li>{% render 'icon', icon: 'truck' %} {{ section.settings.perk_shipping | replace: '[amount]', threshold_money }}</li>
+        {%- endif -%}
+        {%- if section.settings.perk_2 != blank -%}<li>{% render 'icon', icon: 'refill' %} {{ section.settings.perk_2 }}</li>{%- endif -%}
+        {%- if section.settings.perk_3 != blank -%}<li>{% render 'icon', icon: 'leaf' %} {{ section.settings.perk_3 }}</li>{%- endif -%}
+      </ul>
+
+      {%- if ingredient_list.size > 0 -%}
+        <div class="product__block">
+          <h2 class="product__label">{{ 'products.key_ingredients' | t }}</h2>
+          <ul class="ing-rows" role="list">
+            {%- for ing in ingredient_list -%}
+              {% render 'ingredient', handle: ing, style: 'row' %}
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      <div class="product__accordions">
+        {%- for part in desc_parts offset: 1 -%}
+          {%- liquid
+            assign heading = part | split: '</h4>' | first | strip_html | strip
+            assign body = part | split: '</h4>' | last
+            assign is_use = false
+            if heading contains 'How to use'
+              assign is_use = true
+            endif
+          -%}
+          <details class="accordion"{% if is_use %} open{% endif %}>
+            <summary><span>{{ heading }}</span>{% render 'icon', icon: 'plus' %}</summary>
+            <div class="accordion__body rte">
+              {%- if is_use and body contains '<li>' -%}
+                {%- assign steps = body | split: '<li>' -%}
+                <div class="checklist checklist--compact" data-checklist>
+                  {%- for step in steps offset: 1 -%}
+                    <div class="checklist__row">
+                      <input type="checkbox" id="Use-{{ section.id }}-{{ forloop.index }}">
+                      <label for="Use-{{ section.id }}-{{ forloop.index }}">
+                        <span class="checklist__num" aria-hidden="true"></span>
+                        <span class="checklist__text">{{ step | split: '</li>' | first | strip_html | strip }}</span>
+                      </label>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {%- else -%}
+                {{ body }}
+              {%- endif -%}
+            </div>
+          </details>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-product-json>
+    {
+      "variants": [
+        {%- for v in product.variants -%}
+          {
+            "id": {{ v.id }},
+            "options": {{ v.options | json }},
+            "available": {{ v.available | json }},
+            "price": {{ v.price | money | json }},
+            "compare": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}null{% endif %},
+            "media": {% if v.featured_media %}{{ v.featured_media.id }}{% else %}null{% endif %}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+</section>
+
+<div class="sticky-buy" data-sticky-buy aria-hidden="true">
+  <div class="sticky-buy__inner">
+    {% render 'branded-product-image', product: product, width: 120, loading: 'lazy', alt: product.title %}
+    <div class="sticky-buy__text"><strong>{{ product.title }}</strong><span data-sticky-price>{{ current.price | money }}</span></div>
+    <button type="button" class="shine-btn" data-sticky-add tabindex="-1">{{ 'products.add_to_cart' | t }}</button>
+  </div>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ request.origin | append: product.url | json }},
+    {%- capture brand_image_url -%}{% render 'branded-product-image', product: product, output: 'url', width: 1920 %}{%- endcapture -%}
+    {%- if brand_image_url != blank -%}
+      "image": [{{ brand_image_url | strip | json }}],
+    {%- elsif product.featured_media -%}
+      "image": [{{ product.featured_media | image_url: width: 1920 | prepend: 'https:' | json }}],
+    {%- endif -%}
+    "description": {{ product.description | strip_html | json }},
+    "brand": { "@type": "Brand", "name": {{ product.vendor | json }} },
+    "offers": [
+      {%- for v in product.variants -%}
+        {
+          "@type": "Offer",
+          {%- if v.sku != blank -%}"sku": {{ v.sku | json }},{%- endif -%}
+          "availability": "http://schema.org/{% if v.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price": {{ v.price | divided_by: 100.00 | json }},
+          "priceCurrency": {{ cart.currency.iso_code | json }},
+          "url": {{ request.origin | append: v.url | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "class": "section-main-product",
+  "settings": [
+    { "type": "paragraph", "content": "Key ingredients come from product tags like ing:niacinamide. Description headings (h4) become accordions, and the How to use list becomes an interactive checklist." },
+    { "type": "text", "id": "perk_shipping", "label": "Shipping perk", "info": "[amount] is replaced by the threshold from theme settings.", "default": "Free shipping over [amount]" },
+    { "type": "text", "id": "perk_2", "label": "Perk 2", "default": "Refill pods for every jar and bottle" },
+    { "type": "text", "id": "perk_3", "label": "Perk 3", "default": "Fragrance free, vegan, cruelty free" }
+  ]
+}
+{% endschema %}

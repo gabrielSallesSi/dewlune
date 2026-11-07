@@ -1,0 +1,28 @@
+<section class="section">
+  <div class="container">
+    <h1 class="h1"><span class="blur-text" data-blur-text>{{ section.settings.heading }}</span></h1>
+    <ul class="collection-list" role="list">
+      {%- for collection in collections -%}
+        <li class="collection-list__item glare" data-glare>
+          <a href="{{ collection.url }}">
+            {%- if collection.featured_image -%}
+              {{ collection.featured_image | image_url: width: 1600 | image_tag: loading: 'lazy', widths: '480, 960, 1600', sizes: '(min-width: 990px) 33vw, 100vw' }}
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+            <span class="collection-list__title">{{ collection.title }} <small>{{ 'collections.count' | t: count: collection.products_count }}</small></span>
+          </a>
+          <span class="glare__band" aria-hidden="true"></span>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "class": "section-list-collections",
+  "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "Collections" } ]
+}
+{% endschema %}

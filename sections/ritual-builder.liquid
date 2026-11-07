@@ -1,0 +1,87 @@
+{%- liquid
+  assign collection = section.settings.collection
+  if collection == blank
+    assign collection = collections.all
+  endif
+  assign need = section.settings.count
+-%}
+<section class="section builder" data-builder data-need="{{ need }}" data-discount="{{ section.settings.discount }}">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="h2"><span class="blur-text" data-blur-text data-on-view>{{ section.settings.heading }}</span></h2>
+      </div>
+      {%- if section.settings.text != blank -%}<p class="section-head__text">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+
+    <div class="builder__grid">
+      <fieldset class="builder__options">
+        <legend class="visually-hidden">{{ section.settings.heading }}</legend>
+        {%- for product in collection.products limit: 12 -%}
+          {%- liquid
+            assign v = product.selected_or_first_available_variant
+            if product.tags contains 'bundle'
+              continue
+            endif
+          -%}
+          {%- capture tile_image_url -%}{% render 'branded-product-image', product: product, output: 'url', width: 400 %}{%- endcapture -%}
+          <label class="tile" style="--i: {{ forloop.index0 }}">
+            <input class="tile__input" type="checkbox" value="{{ v.id }}" data-price="{{ v.price }}" data-title="{{ product.title | escape }}" data-image="{{ tile_image_url | strip | escape }}" {% unless v.available %}disabled{% endunless %}>
+            <span class="tile__body">
+              <span class="tile__img">
+                {% render 'branded-product-image', product: product, width: 400, loading: 'lazy', alt: product.title, sizes: '160px' %}
+              </span>
+              <span class="tile__name">{{ product.title }}</span>
+              <span class="tile__price">{{ v.price | money }}</span>
+            </span>
+          </label>
+        {%- endfor -%}
+      </fieldset>
+
+      <aside class="builder__tray" aria-live="polite">
+        <p class="builder__count"><span data-builder-count>0</span> / {{ need }}</p>
+        <ol class="builder__slots" role="list">
+          {%- for i in (1..need) -%}
+            <li class="builder__slot" data-slot><span>{{ i }}</span></li>
+          {%- endfor -%}
+        </ol>
+        <div class="builder__meter" aria-hidden="true"><span data-builder-meter></span></div>
+        <dl class="builder__totals">
+          <div><dt>{{ section.settings.label_value }}</dt><dd data-builder-value>{{ 0 | money }}</dd></div>
+          <div class="builder__save"><dt>{{ section.settings.label_save }}</dt><dd data-builder-save>{{ 0 | money }}</dd></div>
+        </dl>
+        <button type="button" class="shine-btn shine-btn--block" data-builder-add disabled>
+          <span data-builder-cta>{{ section.settings.cta_locked }}</span>
+          {% render 'icon', icon: 'arrow-circle' %}
+          <span class="dots-loader" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        </button>
+        <p class="builder__fine">{{ section.settings.fine }}</p>
+        <template data-builder-strings>
+          {"locked": {{ section.settings.cta_locked | json }}, "ready": {{ section.settings.cta_ready | json }}}
+        </template>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Build your ritual",
+  "class": "section-builder",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Build your ritual" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pick any three, save 15%" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Mix steps however you like. The saving applies automatically at checkout." },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "count", "label": "Products in a ritual", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "range", "id": "discount", "label": "Discount shown", "info": "Create a matching automatic discount in Shopify admin.", "min": 0, "max": 40, "step": 1, "unit": "%", "default": 15 },
+    { "type": "text", "id": "label_value", "label": "Total label", "default": "Ritual total" },
+    { "type": "text", "id": "label_save", "label": "Saving label", "default": "You save" },
+    { "type": "text", "id": "cta_locked", "label": "Button while picking", "default": "Choose your products" },
+    { "type": "text", "id": "cta_ready", "label": "Button when ready", "default": "Add ritual to bag" },
+    { "type": "text", "id": "fine", "label": "Fine print", "default": "Products without the bundle tag are eligible. Saving shown before tax." }
+  ],
+  "presets": [ { "name": "Build your ritual" } ]
+}
+{% endschema %}

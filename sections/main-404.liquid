@@ -1,0 +1,14 @@
+<section class="section not-found iri-band" data-iridescence-host>
+  <div class="iridescence" data-iridescence data-color="#F2D2BC" data-speed="0.5" aria-hidden="true"><canvas></canvas></div>
+  <div class="iri-band__fallback" aria-hidden="true"></div>
+  <div class="container container--narrow iri-band__inner">
+    <p class="eyebrow">404</p>
+    <h1 class="h1"><span class="blur-text" data-blur-text>{{ 'templates.404_title' | t }}</span></h1>
+    <p class="iri-band__text">{{ 'templates.404_text' | t }}</p>
+    <a href="{{ routes.all_products_collection_url }}" class="shine-btn shine-btn--dark">{{ 'cart.continue' | t }}{% render 'icon', icon: 'arrow-circle' %}</a>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "404", "class": "section-404", "settings": [] }
+{% endschema %}

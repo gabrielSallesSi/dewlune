@@ -1,0 +1,1 @@
+{ "sections": { "main": { "type": "main-collection", "settings": { "per_page": 24 } }, "quiz": { "type": "quiz-teaser", "settings": {} } }, "order": ["main", "quiz"] }
